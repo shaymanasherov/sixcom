@@ -1,0 +1,70 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <sstream>
+#include <typeinfo>
+#include <string>
+#include <fstream>
+using namespace std;
+int login(string id, string pass){
+	int  k=0;
+	if (id.length() < 9 || pass.length() < 10) 
+		return 4;
+	ifstream fin;
+	fin.open("six.txt", ifstream::in);
+	string  id1, name, pasw, status;
+	string str;
+	char temp[20];
+	if (!fin.is_open()){
+		cout << "Error open file!" << endl;
+	}
+	else{
+		while (!fin.eof()){
+			getline(fin, str);
+			int i = 0, j = 0;
+			for (i; str[i] != ','; i++, j++){
+				temp[j] = str[i];
+			}
+			temp[j] = '\0';
+			string id1(temp);
+			j = 0;
+			i++;
+			for (i; str[i] != '.'; i++, j++){
+				temp[j] = str[i];
+			}
+			temp[j] = '\0';
+			string name(temp);
+			j = 0;
+			i++;
+			for (i; str[i] != '-'; i++, j++){
+				temp[j] = str[i];;
+			}
+			temp[j] = '\0';
+			string pasw(temp);
+			j = 0;
+			i++;
+			temp[j] = str[i];
+			temp[j + 1] = '\0';
+			string status(temp);
+			if ((id == id1) && (pasw == pass)){
+				k++;
+				return 3;
+			}
+			else if ((id == id1) && (pasw != pass)){
+				k++;
+				return 2;
+			}
+		}
+	}
+	if (k == 0){
+		return 1;
+	}
+	fin.close();
+	return 0;
+}
+
+int main(){
+	string id = "111111111";
+	string pass = "1234567890";
+	cout << login(id, pass);
+	return 0;
+}
