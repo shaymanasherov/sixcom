@@ -1,0 +1,41 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <sstream>
+#include <typeinfo>
+#include <string>
+#include <fstream>
+using namespace std;
+bool Ismanager(string id){
+	ifstream fin;
+	fin.open("six.txt", ifstream::in);
+	string  id1;
+	string str;
+	char temp[20],status;
+	if (!fin.is_open()){
+		cout << "Error open file!" << endl;
+	}
+	else{
+		while (!fin.eof()){
+			getline(fin, str);
+			int i = 0, j = 0;
+			for (i; str[i] != ','; i++, j++){
+				temp[j] = str[i];
+			}
+			temp[j] = '\0';
+			string id1(temp);
+			j = 0;
+			i++;
+			for (i; str[i] != '-';i++){
+			}
+			i++;
+			status = str[i];
+			if (id == id1){
+				if (status == '0')
+					return false;
+				else
+					return true;
+			}
+		}
+		fin.close();
+	}
+}
