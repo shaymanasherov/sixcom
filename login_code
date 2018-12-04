@@ -61,10 +61,3 @@ int login(string id, string pass){
 	fin.close();
 	return 0;
 }
-
-int main(){
-	string id = "111111111";
-	string pass = "1234567890";
-	cout << login(id, pass);
-	return 0;
-}
