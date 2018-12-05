@@ -259,11 +259,33 @@ Employee* el_toArray(EmpList* el)
 
 int main()
 {
+	\\char to string
 	char temp[3] = { 'h','i','\0' };
 	std::string s(temp);
 	std::cout << s;
+	
+	
+	\\input eg
+	ClientList* cl = new ClientList;
+	Client* c = new Client;
+	std::string id1 = "209239276";
+	strcpy(c->id, id1.c_str());
+	std::string name1 = "Ofek";
+	strcpy(c->name, name1.c_str());
+	std::string p1 = "0524771955";
+	strcpy(c->phone, p1.c_str());
+	std::string s1 = "won";
+	strcpy(c->status, s1.c_str());
+	c->sum = 100;
+	cl_prepend(c,cl);
+	Print(*cl);
+	cl_remove(0, cl);
+	Print(*cl);
 	system("pause");
 	return 0;
+	
+	
+	
 }
 
 
