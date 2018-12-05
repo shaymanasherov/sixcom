@@ -47,7 +47,7 @@ typedef struct
 /*returns true if the list is empty*/
 bool cl_isEmpty(ClientList cl)
 {
-	return cl.size > 0;
+	return !(cl.size > 0);
 }
 /*pushes a new object to the head of the list*/
 void cl_prepend(Client* c, ClientList* cl)
@@ -119,7 +119,7 @@ Client* cl_toArray(ClientList* cl)
 /*returns true if the list is empty*/
 bool ol_isEmpty(OpList ol)
 {
-	return ol.size > 0;
+	return !(ol.size > 0);
 }
 /*pushes a new object to the head of the list*/
 void ol_prepend(Opportunity* op, OpList* ol)
@@ -190,7 +190,7 @@ Opportunity* ol_toArray(OpList* ol)
 /*returns true if the list is empty*/
 bool el_isEmpty(EmpList el)
 {
-	return el.size > 0;
+	return !(el.size > 0);
 }
 /*pushes a new object to the head of the list*/
 void el_prepend(Employee* e, EmpList* el)
@@ -278,9 +278,7 @@ int main()
 	strcpy(c->status, s1.c_str());
 	c->sum = 100;
 	cl_prepend(c,cl);
-	Print(*cl);
 	cl_remove(0, cl);
-	Print(*cl);
 	system("pause");
 	return 0;
 	
