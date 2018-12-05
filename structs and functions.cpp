@@ -3,10 +3,10 @@
 
 typedef struct Client
 {
-	char id[9];
-	char name[30];
-	char phone[10];
-	char status[25];
+	char id[10];
+	char name[40];
+	char phone[11];
+	char status[35];
 	float sum = 0;
 	Client* next = nullptr;
 }Client;
@@ -18,10 +18,10 @@ typedef struct
 }ClientList;
 typedef struct Opportunity
 {
-	char id[9];
-	char name[30];
-	char phone[10];
-	char status[25];
+	char id[10];
+	char name[40];
+	char phone[11];
+	char status[35];
 	Opportunity* next = nullptr;
 }Opportunity;
 typedef struct
@@ -32,9 +32,9 @@ typedef struct
 }OpList;
 typedef struct Employee
 {
-	char id[9];
-	char name[30];
-	char password[10];
+	char id[10];
+	char name[40];
+	char password[20];
 	bool isManager;
 	Employee* next = nullptr;
 }Employee;
@@ -50,38 +50,38 @@ bool cl_isEmpty(ClientList cl)
 	return cl.size > 0;
 }
 /*pushes a new object to the head of the list*/
-ClientList* cl_prepend(Client* c, ClientList* cl)
+void cl_prepend(Client* c, ClientList* cl)
 {
 	c->next = cl->head;
 	cl->head = c;
-	++cl->size;
-	return cl;
+	++cl->size
 }
 /*pushes a new object to the tail of the list*/
-ClientList* cl_append(Client* c, ClientList* cl)
+void cl_append(Client* c, ClientList* cl)
 {
 	if (!cl_isEmpty(*cl))
 	{
 		Client* last = cl->head;
-		for (int i = 0; i < cl->size; i++)
+		for (int i = 0; i < cl->size-1; i++)
 		{
 			last = last->next;
 		}
-		last = c;
+		last->next = c;
 		++cl->size;
 		return cl;
 	}
-	return cl_prepend(c, cl);
+	else
+		cl_prepend(c, cl);
 
 }
 /*gets an object from the list by index*/
-Client cl_get(int index, const ClientList* cl)
+Client* cl_get(int index, const ClientList* cl)
 {
 	Client* c = cl->head;
 	while (c && index--) {
 		c = c->next;
 	}
-	return *c;
+	return c;
 }
 /*removes an object from the list by index*/
 void cl_remove(int index, ClientList* cl) {
@@ -110,7 +110,7 @@ Client* cl_toArray(ClientList* cl)
 	Client* arr = new Client[cl->size];
 	for (int i = 0; i < cl->size; i++)
 	{
-		arr[i] = cl_get(i, cl);
+		arr[i] = *(cl_get(i, cl));
 	}
 
 	return arr;
@@ -122,38 +122,37 @@ bool ol_isEmpty(OpList ol)
 	return ol.size > 0;
 }
 /*pushes a new object to the head of the list*/
-OpList* ol_prepend(Opportunity* op, OpList* ol)
+void ol_prepend(Opportunity* op, OpList* ol)
 {
 	op->next = ol->head;
 	ol->head = op;
 	++ol->size;
-	return ol;
 }
 /*pushes a new object to the tail of the list*/
-OpList* ol_append(Opportunity* o, OpList* ol)
+void ol_append(Opportunity* o, OpList* ol)
 {
 	if (!ol_isEmpty(*ol))
 	{
 		Opportunity* last = ol->head;
-		for (int i = 0; i < ol->size; i++)
+		for (int i = 0; i < ol->size-1; i++)
 		{
 			last = last->next;
 		}
-		last = o;
+		last->next = o;
 		++ol->size;
-		return ol;
 	}
-	return ol_prepend(o, ol);
+	else
+		ol_prepend(o, ol);
 
 }
 /*gets an object from the list by index*/
-Opportunity ol_get(int index, const OpList* ol)
+Opportunity* ol_get(int index, const OpList* ol)
 {
 	Opportunity* o = ol->head;
 	while (o && index--) {
 		o = o->next;
 	}
-	return *o;
+	return o;
 }
 /*removes an object from the list by index*/
 void ol_remove(int index, OpList* ol) {
@@ -182,7 +181,7 @@ Opportunity* ol_toArray(OpList* ol)
 	Opportunity* arr = new Opportunity[ol->size];
 	for (int i = 0; i < ol->size; i++)
 	{
-		arr[i] = ol_get(i, ol);
+		arr[i] = *(ol_get(i, ol));
 	}
 
 	return arr;
@@ -194,28 +193,27 @@ bool el_isEmpty(EmpList el)
 	return el.size > 0;
 }
 /*pushes a new object to the head of the list*/
-EmpList* el_prepend(Employee* e, EmpList* el)
+void el_prepend(Employee* e, EmpList* el)
 {
 	e->next = el->head;
 	el->head = e;
 	++el->size;
-	return el;
 }
 /*pushes a new object to the tail of the list*/
-EmpList* el_append(Employee* e, EmpList* el)
+void* el_append(Employee* e, EmpList* el)
 {
 	if (!el_isEmpty(*el))
 	{
 		Employee* last = el->head;
-		for (int i = 0; i < el->size; i++)
+		for (int i = 0; i < el->size-1; i++)
 		{
 			last = last->next;
 		}
-		last = e;
+		last->next = e;
 		++el->size;
-		return el;
 	}
-	return el_prepend(e, el);
+	else
+		el_prepend(e, el);
 }
 /*gets an object from the list by index*/
 Employee el_get(int index, const EmpList* el)
@@ -253,7 +251,7 @@ Employee* el_toArray(EmpList* el)
 	Employee* arr = new Employee[el->size];
 	for (int i = 0; i < el->size; i++)
 	{
-		arr[i] = el_get(i, el);
+		arr[i] = *(el_get(i, el));
 	}
 
 	return arr;
