@@ -1,0 +1,151 @@
+typedef struct Employee
+{
+	char id[10];
+	char name[30];
+	char password[11];
+	bool isManager;
+	Employee* next = nullptr;
+}Employee;
+typedef struct EmpList
+{
+	Employee* head = nullptr;
+	int size = 0;
+}EmpList;
+EmpList* sort_name_Emp(EmpList* em);//create new list sort by alphbetic order
+void cl_prepend(Employee* e, EmpList* em);//function to add the first node to the list
+void cl_append(Employee* e, EmpList* em);// function to add other nodes to the list
+bool cl_isEmpty(EmpList em);// function checks if the list is empty 
+bool Ismanager(string id, EmpList* em);//bool function return true or false if the certain id belong to manager,get string and list of employes
+Employee* cl_toArray(EmpList* em);//function to convert list to array
+Employee* em_get(int index, const EmpList* em);//help function to convert list to array
+EmpList * list_employee(){ //function read from file and create list
+	ifstream fin;
+	fin.open("Workers.txt", ifstream::in);
+	string str;
+	char temp[20];
+	EmpList* em = new EmpList;
+	if (!fin.is_open()){
+		cout << "Error open file!" << endl;
+	}
+	else{
+		while (!fin.eof()){
+			Employee* e = new Employee;
+			getline(fin, str);
+			int i = 0, j = 0;
+			for (i; str[i] != ','; i++, j++){
+				temp[j] = str[i];
+			}
+			temp[j] = '\0';
+			strcpy(e->id, temp);
+			j = 0;
+			i++;
+			for (i; str[i] != '.'; i++, j++){
+				temp[j] = str[i];
+			}
+			temp[j] = '\0';
+			strcpy(e->name, temp);
+			j = 0;
+			i++;
+			for (i; str[i] != '-'; i++, j++){
+				temp[j] = str[i];;
+			}
+			temp[j] = '\0';
+			strcpy(e->password, temp);
+
+			j = 0;
+			i++;
+			temp[j] = str[i];
+			temp[j + 1] = '\0';
+			if (temp[j] == '0'){
+				e->isManager = false;
+			}
+			else
+				e->isManager = true;
+			cl_append(e, em);
+		}
+
+	}
+	return em;
+}
+void cl_prepend(Employee* e, EmpList* em)//help function to create list of employee (if it the first element in list this funcrion will be activated)
+{
+	e->next = em->head;
+	em->head = e;
+	++em->size;
+}
+void cl_append(Employee* e, EmpList* em)//function to create the list of structs of employee
+{
+	if (!cl_isEmpty(*em))
+	{
+		Employee* last = em->head;
+		for (int i = 0; i < em->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = e;
+		++em->size;
+	}
+	else
+		cl_prepend(e, em);
+
+}
+bool cl_isEmpty(EmpList em)
+{
+	return !(em.size > 0);
+}
+EmpList* sort_name_Emp(EmpList* em){ //function create new list and sort it by the alphabetical order and return new list
+	EmpList *list = new EmpList;
+	Employee *arr = new Employee[em->size];
+	Employee *temp = new Employee[em->size];
+	arr = cl_toArray(em);
+	for (int i = 0; i < em->size; i++){
+		for (int j = 1; j<em->size; j++){
+			if ((strcmp(arr[j - 1].name, arr[j].name))>0){
+				temp[0] = arr[j - 1];
+				arr[j - 1] = arr[j];
+				arr[j] = temp[0];
+			}
+		}
+	}
+	for (int i = 0; i < em->size; i++){
+		Employee *node = new Employee;
+		strcpy(node->id, arr[i].id);
+		strcpy(node->name, arr[i].name);
+		strcpy(node->password, arr[i].password);
+		node->isManager = arr[i].isManager;
+		cl_append(node, list);
+	}
+	return list;
+}
+Employee* cl_toArray(EmpList* em) //function to convert employee list to array
+{
+	Employee* arr = new Employee[em->size];
+	for (int i = 0; i < em->size; i++)
+	{
+		arr[i] = *(em_get(i, em));
+	}
+
+	return arr;
+}
+Employee* em_get(int index, const EmpList* em)//help function to convert employee list to array
+{
+	Employee* c = em->head;
+	while (c && index--) {
+		c = c->next;
+	}
+	return c;
+}
+bool Ismanager(string id, EmpList* em){//return true or false if specific id is manager
+	Employee *current = em->head;
+	while (current != NULL){
+		string id1(current->id);
+		if (id == id1){
+			if (current->isManager){
+				return true;
+			}
+			else
+				return false;
+		}
+		current= current->next;
+	}
+}
