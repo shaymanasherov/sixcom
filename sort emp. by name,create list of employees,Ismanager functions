@@ -1,7 +1,7 @@
 typedef struct Employee
 {
 	char id[10];
-	char name[30];
+	char name[40];
 	char password[11];
 	bool isManager;
 	Employee* next = nullptr;
