@@ -2,75 +2,132 @@
 #include <stdio.h>
 #include <fstream>
 #include <string>
-#include "Employee.h"
-
 using namespace std;
 
-struct Employee {
-	string id;
-	string firstName;
-	string lastName;
-	string password;
+typedef struct Employee
+{
+	char id[10];
+	char name[30];
+	char password[10];
 	bool isManager;
-};
+	Employee* next = nullptr;
+}Employee;
 
-int isValidEmployee(string id, string firstName, string lastName, string password, string isManager)
+typedef struct
 {
-	if (id.length() > 9)
-		return 1;
-	if (firstName.length() > 20)
-		return 2;
-	if (lastName.length() > 20)
-		return 3;
-	if (password.length() < 10)
+	Employee* head = nullptr;
+	int size = 0;
+}EmpList;
+
+/*returns true if the list is empty*/
+bool el_isEmpty(EmpList el)
+{
+	return el.size == 0;
+}
+/*pushes a new object to the head of the list*/
+void el_prepend(Employee* e, EmpList* el)
+{
+	e->next = el->head;
+	el->head = e;
+	++el->size;
+}
+/*pushes a new object to the tail of the list*/
+void el_append(Employee* e, EmpList* el)
+{
+	if (!el_isEmpty(*el))
 	{
-		for (int i = 0; i < password.length(); i++)
-			if (password[i] < '0' || password[i] > '9')
-				return 4;
+		Employee* last = el->head;
+		for (int i = 0; i < el->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = e;
+		++el->size;
 	}
 	else
-		return 4;
-	if (stoi(isManager) != 0 && stoi(isManager) != 1)
-		return 5;
-	return 0;
+		el_prepend(e, el);
 }
-
-void addEmployee(Employee e)
+/*gets an object from the list by index*/
+Employee el_get(int index, const EmpList* el)
 {
-	ofstream file;
-	file.open("employees.txt", ios::app);
-
-	if (file.is_open())
-	{
-		file << e.id << " ";
-		file << e.firstName << " ";
-		file << e.lastName << " ";
-		file << e.password << " ";
-		file << e.isManager << " ";
-		file << "\n";
+	Employee* e = el->head;
+	while (e && index--) {
+		e = e->next;
 	}
-	file.close();
+	return *e;
 }
+/*removes an object from the list by index*/
+void el_remove(int index, EmpList* el) {
+	Employee* toDelete;
 
+	if (index == 0) {
+		toDelete = el->head;
+		el->head = el->head->next;
+	}
+	else {
+		Employee* before = &(el_get(index - 1, el));
+		toDelete = before->next;
+		before->next = toDelete->next;
+	}
 
-int createEmployee(string id, string firstName, string lastName, string password, string isManager)
+	el->size--;
+	delete toDelete;
+}
+/*return list's size*/
+unsigned el_length(const EmpList* el) {
+	return el->size;
+}
+/*transforms a clientlist to array and returns it*/
+Employee* el_toArray(EmpList* el)
 {
-	Employee e;
-	int valid = isValidEmployee(id, firstName, lastName, password, isManager);
-	if (valid == 0)
+	Employee* arr = new Employee[el->size];
+	for (int i = 0; i < el->size; i++)
 	{
-		e.id = id;
-		e.firstName = firstName;
-		e.lastName = lastName;
-		e.password = password;
-		e.isManager = stoi(isManager);
-		addEmployee(e);
+		arr[i] = el_get(i, el);
 	}
-	else
-		return valid;
+
+	return arr;
 }
 
-void deleteEmployee(string id)
+bool isExist(string id, EmpList *list)
+{
+	Employee* temp = list->head;
+	for (int i = 0; i < list->size; i++)
+	{
+		if (strcmp(id.c_str(), temp->id) == 0)
+			return true;
+		temp = temp->next;
+	}
+	return false;
+}
+
+void createEmployee(string id, string name, string password, string isManager, EmpList* list)
+{
+	if (!isExist(id, list))
+	{
+		ofstream file;
+		file.open("employees.txt", ios::app);
+
+		if (file.is_open())
+		{
+			file << id << ", ";
+			file << name << ". ";
+			file << password << "- ";
+			file << isManager;
+			file << "\n";
+		}
+		file.close();
+
+		Employee* e = new Employee;
+		strcpy(e->id, id.c_str());
+		strcpy(e->name, name.c_str());
+		strcpy(e->password, password.c_str());
+		e->isManager = stoi(isManager);
+		el_append(e, list);
+	}
+}
+
+void deleteEmployee(string id, EmpList* list)
 {
 	ifstream file;
 	ofstream temp;
@@ -95,14 +152,24 @@ void deleteEmployee(string id)
 		temp.close();
 		remove("employees.txt");
 		rename("temp.txt", "employees.txt");
+
+		Employee e;
+		for (int i = 0; i < list->size; i++)
+		{
+			e = el_get(i, list);
+			if (strcmp(e.id, id.c_str()) == 0)
+				el_remove(i, list);
+		}
 	}
 }
 
 int main()
 {
-	createEmployee("3151515", "omer", "biton", "54848", "0");
-	createEmployee("207276452", "shirel", "biton", "12345", "1");
-	createEmployee("315845", "omer", "danieli", "48655", "0");
+	EmpList* list = new EmpList;
+	createEmployee("3151515", "omer biton", "54848", "0", list);
+	createEmployee("20727645", "shirel biton", "12345", "1", list);
+	createEmployee("31584556", "omer danieli", "48655", "0", list);
+	createEmployee("3151515", "sdf dsf", "1244", "0", list);
 
-	deleteEmployee("207276452");
+	deleteEmployee("20727645", list);
 }
