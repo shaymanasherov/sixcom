@@ -7,6 +7,7 @@ typedef struct Client
 	char name[40];
 	char phone[11];
 	char status[35];
+	char email[40]
 	float sum = 0;
 	Client* next = nullptr;
 }Client;
