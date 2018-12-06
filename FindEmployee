@@ -1,0 +1,75 @@
+#include <iostream>
+#include <stdio.h>
+#include <fstream>
+#include <string>
+using namespace std;
+
+typedef struct Employee
+{
+	char id[10];
+	char name[30];
+	char password[10];
+	bool isManager;
+	Employee* next = nullptr;
+}Employee;
+
+typedef struct
+{
+	Employee* head = nullptr;
+	int size = 0;
+}EmpList;
+
+/*returns true if the list is empty*/
+bool el_isEmpty(EmpList el)
+{
+	return el.size == 0;
+}
+bool isExist(string id, EmpList *list)
+{
+	Employee* temp = list->head;
+	for (int i = 0; i < list->size; i++)
+	{
+		if (strcmp(id.c_str(), temp->id) == 0)
+			return true;
+		temp = temp->next;
+	}
+	return false;
+}
+/*pushes a new object to the head of the list*/
+void el_prepend(Employee* e, EmpList* el)
+{
+	e->next = el->head;
+	el->head = e;
+	++el->size;
+}
+void el_append(Employee* e, EmpList* el)
+{
+	if (!el_isEmpty(*el))
+	{
+		Employee* last = el->head;
+		for (int i = 0; i < el->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = e;
+		++el->size;
+	}
+	else
+		el_prepend(e, el);
+}
+EmpList* find_employe_in_list(EmpList employelist, string str)
+{
+	Employee* temp = employelist.head;
+	EmpList* newemplist =nullptr;
+	while (temp!=NULL)
+	{
+		if (str  == temp->id||str==temp->name)
+		{
+			 el_append(temp,newemplist) ;
+
+		}
+		temp = temp->next;
+
+	}
+	return newemplist;
+}
