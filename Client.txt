@@ -1,10 +1,10 @@
-307933879,Moran Asulin,0526656131,active,moran123@gmail.com,0                                                           
-311332597,Shai Manasherov,0546578357,non active,shai978@walla.co.il,157
-207354580,Ziv Gimani,0542555693,active,zivGi@hotmail.com,243
-323686477,Anna Rogozin,057525003,active,123anna@gmail.com.239
-313552234,Sami Saliba,0524240167,blocked,samiSaliba@hotmail.com,425
-322185190,Sasha Andreshensko,0522966568,non active,sasha1234@gmail.com,754
-207276452,Shirel Biton,0506616864,active,12shirel@gmail.com,312
-758963214,Matan Cohen,0503365894,active,matanC@walla.co.il,187
-325698745,Yaron Dahan,0524486523,non active,yaronDahan9877@gmail.com,425
-789632145,Dan Damti,0548896523,active,dan12@walla.co.il,124
+307933879,Moran Asulin.0526656131-active/moran123@gmail.com*0&                                                           
+311332597,Shai Manasherov.0546578357-non active/shai978@walla.co.il*157& 
+207354580,Ziv Gimani.0542555693-active/zivGi@hotmail.com*243& 
+323686477,Anna Rogozin.057525003-active/123anna@gmail.com*239& 
+313552234,Sami Saliba.0524240167-blocked/samiSaliba@hotmail.com*425& 
+322185190,Sasha Andreshensko.0522966568-non active/sasha1234@gmail.com*754& 
+207276452,Shirel Biton.0506616864-active/12shirel@gmail.com*312& 
+758963214,Matan Cohen.0503365894-active/matanC@walla.co.il*187& 
+325698745,Yaron Dahan.0524486523-non active/yaronDahan9877@gmail.com*425& 
+789632145,Dan Damti.0548896523-active/dan12@walla.co.il*124& 
