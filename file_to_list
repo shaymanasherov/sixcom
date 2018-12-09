@@ -1,0 +1,173 @@
+#include <iostream>
+#include <stdio.h>
+#include <fstream>
+#include <string>
+using namespace std;
+
+
+//Employees
+
+typedef struct Employee
+{
+	char id[10];
+	char name[30];
+	char password[10];
+	bool isManager;
+	Employee* next = nullptr;
+}Employee;
+
+typedef struct
+{
+	Employee* head = nullptr;
+	int size = 0;
+}EmpList;
+
+/*returns true if the list is empty*/
+bool el_isEmpty(EmpList el)
+{
+	return !(el.size > 0);
+}
+/*pushes a new object to the head of the list*/
+void el_prepend(Employee* e, EmpList* el)
+{
+	e->next = el->head;
+	el->head = e;
+	++el->size;
+}
+/*pushes a new object to the tail of the list*/
+void el_append(Employee* e, EmpList* el)
+{
+	if (!el_isEmpty(*el))
+	{
+		Employee* last = el->head;
+		for (int i = 0; i < el->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = e;
+		++el->size;
+	}
+	else
+		el_prepend(e, el);
+}
+
+EmpList * list_employee() {
+	int i, j;
+	string line = " ", id, name, password, isManager;
+
+	ifstream file;
+	file.open("employees.txt");
+	
+	EmpList* list = new EmpList;
+
+	if (file.is_open()) 
+	{
+		while (!file.eof())
+		{
+			Employee* e = new Employee;
+			getline(file, line);
+			if (line != "")
+			{
+				i = line.find(',');
+				strcpy(e->id, line.substr(0, i).c_str());
+				j = line.find('.');
+				strcpy(e->name, line.substr(i + 1, j - i - 1).c_str());
+				i = line.find('-');
+				strcpy(e->password, line.substr(j + 1, i - j - 1).c_str());
+				e->isManager = stoi(line.substr(i + 1, strlen(line.c_str())));
+
+				el_append(e, list);
+			}
+		}
+
+	}
+	return list;
+}
+
+
+//Clients
+
+typedef struct Client
+{
+	char id[10];
+	char name[40];
+	char phone[11];
+	char status[35];
+	char email[40];
+	float sum = 0;
+	Client* next = nullptr;
+}Client;
+
+typedef struct
+{
+	Client* head = nullptr;
+	int size = 0;
+
+}ClientList;
+
+/*returns true if the list is empty*/
+bool cl_isEmpty(ClientList cl)
+{
+	return !(cl.size > 0);
+}
+/*pushes a new object to the head of the list*/
+void cl_prepend(Client* c, ClientList* cl)
+{
+	c->next = cl->head;
+	cl->head = c;
+	++cl->size;
+}
+/*pushes a new object to the tail of the list*/
+void cl_append(Client* c, ClientList* cl)
+{
+	if (!cl_isEmpty(*cl))
+	{
+		Client* last = cl->head;
+		for (int i = 0; i < cl->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = c;
+		++cl->size;
+	}
+	else
+		cl_prepend(c, cl);
+
+}
+
+ClientList * list_client() {
+	int i, j;
+	string line = " ", id, name, phone, ststus, email, sum;
+
+	ifstream file;
+	file.open("clients.txt");
+
+	ClientList* list = new ClientList;
+
+	if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			Client* c = new Client;
+			getline(file, line);
+			if (line != "")
+			{
+				i = line.find(',');
+				strcpy(c->id, line.substr(0, i).c_str());
+				j = line.find('.');
+				strcpy(c->name, line.substr(i + 1, j - i - 1).c_str());
+				i = line.find('-');
+				strcpy(c->phone, line.substr(j + 1, i - j - 1).c_str());
+				j = line.find('/');
+				strcpy(c->status, line.substr(i + 1, j - i - 1).c_str());
+				i = line.find('*');
+				strcpy(c->email, line.substr(j + 1, i - j - 1).c_str());
+				j = line.find('&');
+				c->sum = stoi(line.substr(i + 1, strlen(line.c_str()) - 1));
+				cl_append(c, list);
+			}
+		}
+
+	}
+	return list;
+}
