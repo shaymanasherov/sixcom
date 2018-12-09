@@ -48,16 +48,17 @@ void el_append(Employee* e, EmpList* el)
 		el_prepend(e, el);
 }
 /*gets an object from the list by index*/
-Employee el_get(int index, const EmpList* el)
+Employee* el_get(int index, const EmpList* el)
 {
 	Employee* e = el->head;
 	while (e && index--) {
 		e = e->next;
 	}
-	return *e;
+	return e;
 }
 /*removes an object from the list by index*/
 void el_remove(int index, EmpList* el) {
+	Employee* before = el->head;
 	Employee* toDelete;
 
 	if (index == 0) {
@@ -65,7 +66,7 @@ void el_remove(int index, EmpList* el) {
 		el->head = el->head->next;
 	}
 	else {
-		Employee* before = &(el_get(index - 1, el));
+		Employee* before = (el_get(index - 1, el));
 		toDelete = before->next;
 		before->next = toDelete->next;
 	}
@@ -83,7 +84,7 @@ Employee* el_toArray(EmpList* el)
 	Employee* arr = new Employee[el->size];
 	for (int i = 0; i < el->size; i++)
 	{
-		arr[i] = el_get(i, el);
+		arr[i] = *el_get(i, el);
 	}
 
 	return arr;
@@ -142,7 +143,7 @@ void deleteEmployee(string id, EmpList* list)
 		while (!file.eof())
 		{
 			getline(file, line);
-			index = line.find(" ");
+			index = line.find(",");
 			idNumber = line.substr(0, index);
 			if (idNumber != id)
 				temp << line << endl;
@@ -152,14 +153,14 @@ void deleteEmployee(string id, EmpList* list)
 		temp.close();
 		remove("employees.txt");
 		rename("temp.txt", "employees.txt");
+	}
 
-		Employee e;
-		for (int i = 0; i < list->size; i++)
-		{
-			e = el_get(i, list);
-			if (strcmp(e.id, id.c_str()) == 0)
-				el_remove(i, list);
-		}
+	Employee e;
+	for (int i = 0; i < list->size; i++)
+	{
+		e = *el_get(i, list);
+		if (strcmp(e.id, id.c_str()) == 0)
+			el_remove(i, list);
 	}
 }
 
@@ -169,7 +170,8 @@ int main()
 	createEmployee("3151515", "omer biton", "54848", "0", list);
 	createEmployee("20727645", "shirel biton", "12345", "1", list);
 	createEmployee("31584556", "omer danieli", "48655", "0", list);
-	createEmployee("3151515", "sdf dsf", "1244", "0", list);
+	createEmployee("56465456", "sdf dsf", "1244", "0", list);
 
 	deleteEmployee("20727645", list);
+	return 0;
 }
