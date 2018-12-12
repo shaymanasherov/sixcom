@@ -96,12 +96,12 @@ Employee* el_toArray(EmpList* el)
 	return arr;
 }
 
-bool isExist(string id, EmpList *list)
+bool isExist(char id[10], EmpList *list)
 {
-	Employee* temp = list->head;
+	Client* temp = list->head;
 	for (int i = 0; i < list->size; i++)
 	{
-		if (strcmp(id.c_str(), temp->id) == 0)
+		if (strcmp(id, temp->id) == 0)
 			return true;
 		temp = temp->next;
 	}
