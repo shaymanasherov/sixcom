@@ -4,6 +4,12 @@
 #include <string>
 using namespace std;
 
+#include <iostream>
+#include <stdio.h>
+#include <fstream>
+#include <string>
+using namespace std;
+
 typedef struct Employee
 {
 	char id[10];
@@ -131,7 +137,7 @@ void createEmployee(const char id[10], const char name[30], const char password[
 	}
 }
 
-void deleteEmployee(string id, EmpList* list)
+void deleteEmployee(const char id[10], EmpList* list)
 {
 	ifstream file;
 	ofstream temp;
@@ -162,7 +168,7 @@ void deleteEmployee(string id, EmpList* list)
 	for (int i = 0; i < list->size; i++)
 	{
 		e = *el_get(i, list);
-		if (strcmp(e.id, id.c_str()) == 0)
+		if (strcmp(e.id, id) == 0)
 			el_remove(i, list);
 	}
 }
