@@ -102,12 +102,15 @@ bool isExist(string id, EmpList *list)
 	return false;
 }
 
-void createEmployee(string id, string name, string password, string isManager, EmpList* list)
+void createEmployee(const char id[10], const char name[30], const char password[10], bool isManager, EmpList* list)
 {
 	if (!isExist(id, list))
 	{
 		ofstream file;
 		file.open("employees.txt", ios::app);
+
+		if (!el_isEmpty(*list))
+			file << "\n";
 
 		if (file.is_open())
 		{
@@ -120,10 +123,10 @@ void createEmployee(string id, string name, string password, string isManager, E
 		file.close();
 
 		Employee* e = new Employee;
-		strcpy(e->id, id.c_str());
-		strcpy(e->name, name.c_str());
-		strcpy(e->password, password.c_str());
-		e->isManager = stoi(isManager);
+		strcpy(e->id, id);
+		strcpy(e->name, name);
+		strcpy(e->password, password);
+		e->isManager = isManager;
 		el_append(e, list);
 	}
 }
@@ -167,10 +170,10 @@ void deleteEmployee(string id, EmpList* list)
 int main()
 {
 	EmpList* list = new EmpList;
-	createEmployee("3151515", "omer biton", "54848", "0", list);
-	createEmployee("20727645", "shirel biton", "12345", "1", list);
-	createEmployee("31584556", "omer danieli", "48655", "0", list);
-	createEmployee("56465456", "sdf dsf", "1244", "0", list);
+	createEmployee("315115454", "omer biton", "54848", true, list);
+	createEmployee("20727645", "shirel biton", "12345", false, list);
+	createEmployee("31584556", "omer danieli", "48655", false, list);
+	createEmployee("315115454", "sdf dsf", "1244", false, list);
 
 	deleteEmployee("20727645", list);
 	return 0;
