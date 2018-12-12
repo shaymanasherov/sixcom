@@ -96,7 +96,7 @@ Employee* el_toArray(EmpList* el)
 	return arr;
 }
 
-bool isExist(char id[10], EmpList *list)
+bool isExist(const char id[10], EmpList *list)
 {
 	Client* temp = list->head;
 	for (int i = 0; i < list->size; i++)
