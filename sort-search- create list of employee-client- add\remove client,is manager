@@ -60,6 +60,7 @@ Employee* cl_toArray(EmpList* em);//function to convert list to array
 Employee* em_get(int index, const EmpList* em);//help function to convert list to array
 EmpList* search_by_id(char id[11], EmpList* em); //function get id and list and return list of one preson if one exist if not so list return alarm that person not
 EmpList* search_by_name(char name[40], EmpList* em); //function getting name and employee list and return the list of peaple how match the name
+int login(string id, string pass); //login 
 EmpList * list_employee(){ //function read from file and create list
 	ifstream fin;
 	fin.open("Workers.txt", ifstream::in);
@@ -703,4 +704,61 @@ void delete_client(const char id[10], ClientList* list)
 		if (strcmp(c->id, id) == 0)
 			strcpy(c->status, status);
 	}
+}
+
+int login(string id, string pass) {
+	int  k = 0;
+	if (id.length() < 9 || pass.length() < 10)
+		return 4;
+	ifstream fin;
+	fin.open("six.txt", ifstream::in);
+	string  id1, name, pasw, status;
+	string str;
+	char temp[20];
+	if (!fin.is_open()) {
+		cout << "Error open file!" << endl;
+	}
+	else {
+		while (!fin.eof()) {
+			getline(fin, str);
+			int i = 0, j = 0;
+			for (i; str[i] != ','; i++, j++) {
+				temp[j] = str[i];
+			}
+			temp[j] = '\0';
+			string id1(temp);
+			j = 0;
+			i++;
+			for (i; str[i] != '.'; i++, j++) {
+				temp[j] = str[i];
+			}
+			temp[j] = '\0';
+			string name(temp);
+			j = 0;
+			i++;
+			for (i; str[i] != '-'; i++, j++) {
+				temp[j] = str[i];;
+			}
+			temp[j] = '\0';
+			string pasw(temp);
+			j = 0;
+			i++;
+			temp[j] = str[i];
+			temp[j + 1] = '\0';
+			string status(temp);
+			if ((id == id1) && (pasw == pass)) {
+				k++;
+				return 3;
+			}
+			else if ((id == id1) && (pasw != pass)) {
+				k++;
+				return 2;
+			}
+		}
+	}
+	if (k == 0) {
+		return 1;
+	}
+	fin.close();
+	return 0;
 }
