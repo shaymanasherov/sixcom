@@ -1,0 +1,201 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <time.h>
+#include <string>
+#include <fstream>
+using namespace std;
+
+struct saleOpp //sales opportunity
+{
+	char employeeId[10], clientId[10],name[41];
+	int status;
+	saleOpp *next = NULL;
+};
+
+struct SOppList// list of sales opportunities
+{
+	saleOpp *head=NULL;
+	int size=0;
+};
+
+void prntSOpp(saleOpp s);
+void addToList(SOppList *h, saleOpp s);
+void prntSOppList(SOppList h);
+saleOpp newSaleOpp(char emplId[10], char clntId[10], char name[41], int stat);
+void writeSOpp(saleOpp s);
+saleOpp readSOpp(ifstream *read);
+SOppList allSOppList();
+SOppList findClientId(SOppList list,char CId[10]);
+SOppList findEmployeeId(SOppList list, char EId[10]);
+SOppList findStatus(SOppList list, int status);
+saleOpp* listToArray(SOppList list);
+
+
+int main()
+{
+	saleOpp s, s2,s3;
+	char empl[10] = "123456789", clt[10] = "112345678", n[41] = "mother fucker\0";
+	int st = 1;
+	s = newSaleOpp(empl,clt,n,st);
+	//prntSOpp(s);
+	//writeSOpp(s);
+
+	SOppList list=allSOppList();
+	prntSOppList(list);
+	char cid[10] = "777777777";
+	SOppList search = findClientId(list, cid);
+	cout << "Search client list is :" << '\n';
+	prntSOppList(search);
+	char eid[10] = "666666666";
+	SOppList searchE = findEmployeeId(list, eid);
+	cout << "Search employee list is :" << '\n';
+	prntSOppList(searchE);
+	int sts = 0;
+	SOppList searchS = findStatus(list, sts);
+	cout << "Search status list is :" << '\n';
+	prntSOppList(searchS);
+	saleOpp *searchSArray = new saleOpp[searchS.size];
+	searchSArray = listToArray(searchS);
+	for (int i = 0; i < searchS.size; ++i)
+	{
+		cout << "item No." << i + 1;
+		prntSOpp(searchSArray[i]);
+		cout << '\n';
+	}
+	return 0;
+}
+
+void prntSOpp(saleOpp s)//prints saleOpp for to check the code
+{
+	cout << "EId: " << s.employeeId << " CId: " << s.clientId << " name: " << s.name << " status:" << s.status << '\n';
+}
+
+void addToList(SOppList *h, saleOpp s)//adds a saleOpp struct to a list , as the new head
+{
+	saleOpp *newSOpp = new saleOpp;
+	*newSOpp = s;
+	newSOpp->next = h->head;
+	h->head = newSOpp;
+	++h->size;
+}
+
+void prntSOppList(SOppList h)//prints list for code tests
+{
+	saleOpp *tmp;
+	if (h.head != NULL)
+	{
+		cout << "SOpp list :" << '\n';
+		tmp = h.head;
+		while (tmp != NULL)
+		{
+			prntSOpp((*tmp));
+			tmp = tmp->next;
+		}
+	}
+}
+
+saleOpp newSaleOpp(char emplId[10], char clntId[10], char name[41], int stat)//creates a saleOpp with input parameters
+{
+	saleOpp tmp;
+	strcpy(tmp.clientId, clntId);
+	strcpy(tmp.employeeId, emplId);
+	strcpy(tmp.name, name);
+	tmp.status = stat;
+	return tmp;
+}
+
+void writeSOpp(saleOpp s)//adds a saleOpp to the end of the txt file
+{
+	ofstream write;
+	write.open("SOpp.txt", ofstream::app);
+	char n[sizeof(s.name) + 1];
+	strncpy(n, s.name, sizeof(s.name));
+	write << s.clientId << ',' << n << ',' << s.employeeId << ',' << s.status << '\n';
+	write.close();
+}
+
+saleOpp readSOpp(ifstream *read)//creates a new saleOpp from the txt file using the ifstream 
+{                               //object POINTER and returns it
+	saleOpp tmp;
+	(*read).get(tmp.clientId, 10, ',');
+	(*read).ignore(1);
+	(*read).get(tmp.name, 41, ',');
+	(*read).ignore(1);
+	(*read).get(tmp.employeeId, 10, ',');
+	(*read).ignore(1);
+	(*read) >> tmp.status;
+	(*read).ignore(2, '\n');
+	return tmp;
+}
+
+SOppList allSOppList()// reads all of the sale opportunities from txt
+{                     //and creates a list from wich is returned 
+	SOppList list;
+	saleOpp tmp;
+	ifstream read("SOpp.txt");
+	tmp = readSOpp(&read);
+	while (!read.eof())
+	{
+		addToList(&list, tmp);
+		tmp = readSOpp(&read);
+	}
+	read.close();
+	return list;
+}
+
+SOppList findClientId(SOppList list, char CId[10])//creates a list with all saleOpps 
+{                       //that have a matching client id to the parameter
+	SOppList result;
+	if (list.head == NULL)
+		return result;
+	saleOpp *current=list.head;
+	while (current != NULL)
+	{
+		if (!strcmp(current->clientId,CId))
+			addToList(&result, *current);
+		current = current->next;
+	}
+	return result;
+}
+
+SOppList findEmployeeId(SOppList list, char EId[10])
+{//creates a SOppList with all sales opportunities that have a matching
+	SOppList result;//employee id and returns the list 
+	if (list.head == NULL)
+		return result;
+	saleOpp *current = list.head;
+	while (current != NULL)
+	{
+		if (!strcmp(current->employeeId, EId))
+			addToList(&result, *current);
+		current = current->next;
+	}
+	return result;
+}
+
+SOppList findStatus(SOppList list, int status)
+{//creates a list of all the sales opportunities that have
+	SOppList result;//a status that matches the parameter and returns the list
+	if (list.head == NULL)
+		return result;
+	saleOpp *current = list.head;
+	while (current != NULL)
+	{
+		if (current->status == status)
+			addToList(&result, *current);
+		current = current->next;
+	}
+	return result;
+}
+
+saleOpp* listToArray(SOppList list)//creates an array of sale opportunities
+{         // from the give list and returns the array
+	saleOpp *arr = new saleOpp[list.size], *current = list.head;
+	for (int i = 0; i < list.size; ++i)
+	{
+		arr[i] = *current;
+		current = current->next;
+		arr[i].next = NULL;
+	}
+	return arr;
+}
