@@ -1,6 +1,6 @@
-29.90, Years, 5000 minutes, 5000 SMS, 50GB
-59.90 ,price for 2 Years, FULL PACKAGE, Everything included
-120.99, price, Overseas package 1, Everything included
-79.90 ,price, Overseas package 2, 100minutes, unlimited SMS, 2GB
-20.90, price for 2 Years per line, 5000 minutes, 5000 SMS, 50GB
-49.90 ,price for 2 Years per line, FULL PACKAGE, Everything included
+1, 29.90, Years, 5000 minutes, 5000 SMS, 50GB
+2, 59.90 ,price for 2 Years, FULL PACKAGE, Everything included
+3, 120.99, price, Overseas package 1, Everything included
+4, 79.90 ,price, Overseas package 2, 100minutes, unlimited SMS, 2GB
+5, 20.90, price for 2 Years per line, 5000 minutes, 5000 SMS, 50GB
+6, 49.90 ,price for 2 Years per line, FULL PACKAGE, Everything included
