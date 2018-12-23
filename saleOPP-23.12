@@ -1,0 +1,346 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <sstream>
+#include <typeinfo>
+#include <string>
+#include <fstream>
+using namespace std;
+
+typedef struct Opportunity
+{
+	char idClient[10];
+	char idEmployee[10];
+	char name[40];
+	char status[35];
+	int package;
+	Opportunity* next = nullptr;
+}Opportunity;
+
+typedef struct
+{
+	Opportunity* head = nullptr;
+	int size = 0;
+
+}OpList;
+
+/returns true if the list is empty/
+bool ol_isEmpty(OpList ol)
+{
+	return !(ol.size > 0);
+}
+
+/pushes a new object to the head of the list/
+void ol_prepend(Opportunity* op, OpList* ol)
+{
+	op->next = ol->head;
+	ol->head = op;
+	++ol->size;
+}
+
+/pushes a new object to the tail of the list/
+void ol_append(Opportunity* o, OpList* ol)
+{
+	if (!ol_isEmpty(*ol))
+	{
+		Opportunity* last = ol->head;
+		for (int i = 0; i < ol->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = o;
+		++ol->size;
+	}
+	else
+		ol_prepend(o, ol);
+
+}
+
+/gets an object from the list by index/
+Opportunity* ol_get(int index, const OpList* ol)
+{
+	Opportunity* o = ol->head;
+	while (o && index--) {
+		o = o->next;
+	}
+	return o;
+}
+
+/removes an object from the list by index/
+void ol_remove(int index, OpList* ol) {
+	Opportunity* toDelete;
+
+	if (index == 0) {
+		toDelete = ol->head;
+		ol->head = ol->head->next;
+	}
+	else {
+		Opportunity* before = ol_get(index - 1, ol);
+		toDelete = before->next;
+		before->next = toDelete->next;
+	}
+
+	ol->size--;
+	delete toDelete;
+}
+
+/return list's size/
+unsigned ol_length(const OpList* ol) {
+	return ol->size;
+}
+
+/transforms a clientlist to array and returns it/
+Opportunity* ol_toArray(OpList* ol)
+{
+	Opportunity* arr = new Opportunity[ol->size];
+	for (int i = 0; i < ol->size; i++)
+	{
+		arr[i] = *(ol_get(i, ol));
+	}
+
+	return arr;
+}
+
+OpList* not_found1() {
+	OpList *names = new OpList;
+	Opportunity *new1 = new Opportunity;
+	strcpy(new1->name, " not found");
+	strcpy(new1->idClient, " ");
+	strcpy(new1->idEmployee, " ");
+	strcpy(new1->name, " ");
+	strcpy(new1->status, " ");
+	new1->package = 0;
+	new1->next = NULL;
+	ol_prepend(new1, names);
+	names->size = names->size - 1;
+	return names;
+}
+
+OpList* search_by_idClient(const char id[10], OpList* op) {//get id and client list and return tle list with one node include matched client evenwise not foun node
+	Opportunity *current = op->head;
+	OpList *names = new OpList;
+	
+	while (current != NULL) {
+		if (strcmp(current->idClient, id) == 0) {
+			Opportunity* new1 = new Opportunity;
+			*new1 = *current;
+			new1->next = nullptr;
+			ol_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (ol_isEmpty(*names))
+		names = not_found1();
+	return names;
+}
+
+OpList* search_by_idEmployee(const char id[10], OpList* op) {//get id and client list and return tle list with one node include matched client evenwise not foun node
+	Opportunity *current = op->head;
+	OpList *names = new OpList;
+
+	while (current != NULL) {
+		if (strcmp(current->idEmployee, id) == 0) {
+			Opportunity* new1 = new Opportunity;
+			*new1 = *current;
+			new1->next = nullptr;
+			ol_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (ol_isEmpty(*names))
+		names = not_found1();
+	return names;
+}
+
+OpList* search_by_name(const char name[11], OpList* op) {//get phone number and client list and return tle list with one node include matched client evenwise not foun node
+	Opportunity *current = op->head;
+	OpList *names = new OpList;
+
+	while (current != NULL) {
+		if (strcmp(current->name, name) == 0) {
+			Opportunity* new1 = new Opportunity;
+			*new1 = *current;
+			new1->next = nullptr;
+			ol_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (ol_isEmpty(*names))
+		names = not_found1();
+	return names;
+}
+
+OpList* search_by_status(const char status[35], OpList* op) {
+	Opportunity *current = op->head;
+	OpList *names = new OpList;
+
+	while (current != NULL) {
+		if (strcmp(current->status, status) == 0) {
+			Opportunity* new1 = new Opportunity;
+			*new1 = *current;
+			new1->next = nullptr;
+			ol_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (ol_isEmpty(*names))
+		names = not_found1();
+	return names;
+}
+
+OpList* list_opportunities() {
+	int i, j;
+	string line = " ", idClient, idEmployee, name, status, package;
+
+	ifstream file;
+	file.open("opportunities.txt");
+
+	OpList* list = new OpList;
+
+	if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			Opportunity* o = new Opportunity;
+			getline(file, line);
+			if (line != "")
+			{
+				i = line.find(',');
+				strcpy(o->idClient, line.substr(0, i).c_str());
+				j = line.find('.');
+				strcpy(o->idEmployee, line.substr(i + 1, j - i - 1).c_str());
+				i = line.find('&');
+				strcpy(o->name, line.substr(j + 1, i - j - 1).c_str());
+				j = line.find('/');
+				strcpy(o->status, line.substr(i + 1, j - i - 1).c_str());
+				o->package = stoi(line.substr(j + 1, strlen(line.c_str())));
+
+				ol_append(o, list);
+			}
+		}
+
+	}
+	return list;
+}
+
+void printOpportunity(Opportunity s)//prints saleOpp for to check the code
+{
+	cout << "EId: " << s.idClient << " CId: " << s.idEmployee << " name: " << s.name << " status:" << s.status << " package:" << s.package << '\n';
+}
+
+void printOppList(OpList h)//prints list for code tests
+{
+	Opportunity* tmp;
+	if (h.head != NULL)
+	{
+		cout << "SOpp list :" << '\n';
+		tmp = h.head;
+		while (tmp != NULL)
+		{
+			printOpportunity((*tmp));
+			tmp = tmp->next;
+		}
+	}
+}
+
+Opportunity* newSaleOpp(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list)//creates a saleOpp with input parameters
+{
+	Opportunity* tmp = new Opportunity;
+	strcpy(tmp->idClient, clntId);
+	strcpy(tmp->idEmployee, emplId);
+	strcpy(tmp->name, name);
+	strcpy(tmp->status, status);
+	tmp->package = package;
+	return tmp;
+}
+
+void writeSOpp(Opportunity s)//adds a saleOpp to the end of the txt file
+{
+	ofstream write;
+	write.open("opportunities.txt", ofstream::app);
+	char n[sizeof(s.name) + 1];
+	strncpy(n, s.name, sizeof(s.name));
+	write << s.idClient << ',' << s.idEmployee << '.' << s.name << '&' << s.status << '/' << s.package << '\n';
+	write.close();
+}
+
+OpList* add_Opportunity(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list)
+{
+	Opportunity* o = newSaleOpp(clntId, emplId, name, status, package, list);
+	ol_append(o, list);
+	writeSOpp(*o);
+	return list;
+}
+
+int count_Low_Potential(OpList* list)
+{
+	OpList* status = search_by_status("Low potential", list);
+	return status->size;
+}
+
+int count_High_Potential(OpList* list)
+{
+	OpList* status = search_by_status("High potential", list);
+	return status->size;
+}
+
+int count_Closed_Won(OpList* list)
+{
+	OpList* status = search_by_status("Closed won", list);
+	return status->size;
+}
+
+int count_Closed_Lost(OpList* list)
+{
+	OpList* status = search_by_status("Closed lost", list);
+	return status->size;
+}
+
+void update_Opportunity(Opportunity o1, Opportunity o2, OpList* list)
+{
+	Opportunity* head = list->head;
+
+	for (int i = 0; i < list->size; ++i)
+	{
+		if (strcmp(o1.idClient, head->idClient) == 0 && strcmp(o1.idEmployee, head->idEmployee) == 0 && o1.package == head->package)
+		{
+			ol_remove(i, list);
+			break;
+		}
+		head = head->next;
+	}
+	
+	ol_append(&o2, list);
+
+	ifstream file;
+	ofstream temp;
+	string line, idClient, idEmployee, package;
+	int i, j;
+
+	file.open("opportunities.txt");
+	temp.open("temp.txt");
+
+	if (file.is_open() && temp.is_open())
+	{
+		while (!file.eof())
+		{
+			getline(file, line);
+			i = line.find(',');
+			idClient = line.substr(0, i);
+			j = line.find('.');
+			idEmployee = line.substr(i + 1, j - i - 1);
+			i = line.find('&');
+			j = line.find('/');
+			package = line.substr(j + 1, strlen(line.c_str()));
+
+			if (!(strcmp(o1.idClient, idClient.c_str()) == 0 && strcmp(o1.idEmployee, idEmployee.c_str()) == 0 && o1.package == stoi(package)))
+				temp << line << endl;
+		}
+
+		temp << o2.idClient << ',' << o2.idEmployee << '.' << o2.name << '&' << o2.status << '/' << o2.package << '\n';
+		
+		file.close();
+		temp.close();
+		remove("opportunities.txt");
+		rename("temp.txt", "opportunities.txt");
+	}
+}
