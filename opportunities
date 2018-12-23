@@ -100,6 +100,7 @@ Opportunity* ol_toArray(OpList* ol)
 	return arr;
 }
 
+/*returns empty opoortunity*/
 OpList* not_found1() {
 	OpList *names = new OpList;
 	Opportunity *new1 = new Opportunity;
@@ -115,6 +116,7 @@ OpList* not_found1() {
 	return names;
 }
 
+/*returns list opportunities by id client*/
 OpList* search_by_idClient(const char id[10], OpList* op) {//get id and client list and return tle list with one node include matched client evenwise not foun node
 	Opportunity *current = op->head;
 	OpList *names = new OpList;
@@ -133,6 +135,7 @@ OpList* search_by_idClient(const char id[10], OpList* op) {//get id and client l
 	return names;
 }
 
+/*returns list opportunities by id employee*/
 OpList* search_by_idEmployee(const char id[10], OpList* op) {//get id and client list and return tle list with one node include matched client evenwise not foun node
 	Opportunity *current = op->head;
 	OpList *names = new OpList;
@@ -151,6 +154,7 @@ OpList* search_by_idEmployee(const char id[10], OpList* op) {//get id and client
 	return names;
 }
 
+/*returns list opportunities by name*/
 OpList* search_by_name(const char name[11], OpList* op) {//get phone number and client list and return tle list with one node include matched client evenwise not foun node
 	Opportunity *current = op->head;
 	OpList *names = new OpList;
@@ -169,6 +173,7 @@ OpList* search_by_name(const char name[11], OpList* op) {//get phone number and 
 	return names;
 }
 
+/*returns list opportunities by status*/
 OpList* search_by_status(const char status[35], OpList* op) {
 	Opportunity *current = op->head;
 	OpList *names = new OpList;
@@ -187,6 +192,7 @@ OpList* search_by_status(const char status[35], OpList* op) {
 	return names;
 }
 
+/*returns list by file*/
 OpList* list_opportunities() {
 	int i, j;
 	string line = " ", idClient, idEmployee, name, status, package;
@@ -222,26 +228,7 @@ OpList* list_opportunities() {
 	return list;
 }
 
-void printOpportunity(Opportunity s)//prints saleOpp for to check the code
-{
-	cout << "EId: " << s.idClient << " CId: " << s.idEmployee << " name: " << s.name << " status:" << s.status << " package:" << s.package << '\n';
-}
-
-void printOppList(OpList h)//prints list for code tests
-{
-	Opportunity* tmp;
-	if (h.head != NULL)
-	{
-		cout << "SOpp list :" << '\n';
-		tmp = h.head;
-		while (tmp != NULL)
-		{
-			printOpportunity((*tmp));
-			tmp = tmp->next;
-		}
-	}
-}
-
+/*returns node of opportunity*/
 Opportunity* newSaleOpp(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list)//creates a saleOpp with input parameters
 {
 	Opportunity* tmp = new Opportunity;
@@ -253,6 +240,7 @@ Opportunity* newSaleOpp(const char clntId[10], const char emplId[10], const char
 	return tmp;
 }
 
+/*add opportunities to file*/
 void writeSOpp(Opportunity s)//adds a saleOpp to the end of the txt file
 {
 	ofstream write;
@@ -263,6 +251,7 @@ void writeSOpp(Opportunity s)//adds a saleOpp to the end of the txt file
 	write.close();
 }
 
+/*returns list after adding the new opportunity*/
 OpList* add_Opportunity(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list)
 {
 	Opportunity* o = newSaleOpp(clntId, emplId, name, status, package, list);
@@ -271,30 +260,35 @@ OpList* add_Opportunity(const char clntId[10], const char emplId[10], const char
 	return list;
 }
 
+/*returns amount of low potential status*/
 int count_Low_Potential(OpList* list)
 {
 	OpList* status = search_by_status("Low potential", list);
 	return status->size;
 }
 
+/*returns amount of high potential status*/
 int count_High_Potential(OpList* list)
 {
 	OpList* status = search_by_status("High potential", list);
 	return status->size;
 }
 
+/*returns amount of closed won status*/
 int count_Closed_Won(OpList* list)
 {
 	OpList* status = search_by_status("Closed won", list);
 	return status->size;
 }
 
+/*returns amount of closed lost status*/
 int count_Closed_Lost(OpList* list)
 {
 	OpList* status = search_by_status("Closed lost", list);
 	return status->size;
 }
 
+/*update opportunity*/
 void update_Opportunity(Opportunity o1, Opportunity o2, OpList* list)
 {
 	Opportunity* head = list->head;
@@ -336,7 +330,7 @@ void update_Opportunity(Opportunity o1, Opportunity o2, OpList* list)
 				temp << line << endl;
 		}
 
-		temp << o2.idClient << ',' << o2.idEmployee << '.' << o2.name << '&' << o2.status << '/' << o2.package << '\n';
+		temp << o2.idClient << ',' << o2.idEmployee << '.' << o2.name << '&' << o2.status << '/' << o2.package;
 		
 		file.close();
 		temp.close();
