@@ -5,10 +5,9 @@
 #include <string>
 #include <fstream>
 using namespace std;
+//return 0 if user pas unvalid,1 if no such id,if pass not match id return 2, everything ok return 3.
 int login(string id, string pass){
 	int  k=0;
-	if (id.length() < 9 || pass.length() < 10) 
-		return 4;
 	ifstream fin;
 	fin.open("six.txt", ifstream::in);
 	string  id1, name, pasw, status;
