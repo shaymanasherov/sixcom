@@ -163,7 +163,7 @@ EmpList * list_employee() {
 				strcpy(e->name, line.substr(i + 1, j - i - 1).c_str());
 				i = line.find('-');
 				strcpy(e->password, line.substr(j + 1, i - j - 1).c_str());
-				e->isManager = stoi(line.substr(i + 1, strlen(line.c_str())));
+				e->isManager = stoi(line.substr(i + 1 , strlen(line.c_str())));
 
 				el_append(e, list);
 			}
@@ -226,7 +226,7 @@ EmpList* search_by_name(const char name[30], EmpList* op) {
 }
 
 /*update employee*/
-void update_Opportunity(Employee e1, Employee e2, EmpList* list)
+void update_Employee(Employee e1, Employee e2, EmpList* list)
 {
 	Employee* head = list->head;
 
@@ -247,7 +247,7 @@ void update_Opportunity(Employee e1, Employee e2, EmpList* list)
 	string line, id;
 	int i;
 
-	file.open("opportunities.txt");
+	file.open("employees.txt");
 	temp.open("temp.txt");
 
 	if (file.is_open() && temp.is_open())
@@ -292,7 +292,7 @@ int main()
 
 	Employee* e3 = create_employee("315115454", "111111111", "sadfa", true, list);
 	Employee* e4 = create_employee("222222222", "111111111", "asfd", true, list);
-	update_Opportunity(*e3, *e4, list);
+	update_Employee(*e3, *e4, list);
 
 	return 0;
 }
