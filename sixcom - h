@@ -1,0 +1,114 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <string.h>
+#include <sstream>
+#include <fstream>
+
+using namespace std;
+
+typedef struct Client
+{
+	char id[10];
+	char name[40];
+	char phone[11];
+	char status[35];
+	char email[40];
+	float sum = 0;
+	Client* next = nullptr;
+}Client;
+
+typedef struct
+{
+	Client* head = nullptr;
+	int size = 0;
+
+}ClientList;
+
+typedef struct Employee
+{
+	char id[10];
+	char name[30];
+	char password[10];
+	bool isManager;
+	Employee* next = nullptr;
+}Employee;
+
+typedef struct
+{
+	Employee* head = nullptr;
+	int size = 0;
+}EmpList;
+
+typedef struct Opportunity
+{
+	char idClient[10];
+	char idEmployee[10];
+	char name[40];
+	char status[35];
+	int package;
+	Opportunity* next = nullptr;
+}Opportunity;
+
+typedef struct
+{
+	Opportunity* head = nullptr;
+	int size = 0;
+
+}OpList;
+
+bool cl_isEmpty(ClientList cl);
+void cl_prepend(Client* c, ClientList* cl);
+void cl_append(Client* c, ClientList* cl);
+Client* cl_get(int index, const ClientList* cl);
+void cl_remove(int index, ClientList* cl);
+unsigned cl_length(const ClientList* cl);
+Client* cl_toArray(ClientList* cl);
+bool el_isEmpty(EmpList el);
+void el_prepend(Employee* e, EmpList* el);
+void el_append(Employee* e, EmpList* el);
+Employee* el_get(int index, const EmpList* el);
+void el_remove(int index, EmpList* el);
+unsigned el_length(const EmpList* el);
+Employee* el_toArray(EmpList* el);
+bool ol_isEmpty(OpList ol);
+void ol_prepend(Opportunity* op, OpList* ol);
+void ol_append(Opportunity* o, OpList* ol);
+Opportunity * ol_get(int index, const OpList* ol);
+void ol_remove(int index, OpList* ol);
+unsigned ol_length(const OpList* ol);
+Opportunity * ol_toArray(OpList* ol);
+bool isExist(const char id[10], ClientList* list);
+void add_client(const char id[10], const char name[40], const char phone_num[11], const char status[35], const char email[40], float sum, ClientList* list);
+ClientList * list_client();
+void delete_client(const char id[10], ClientList* list);
+void block_client(const char id[10], ClientList* list);
+ClientList* not_found1();
+ClientList* search_by_id(const char id[10], ClientList* op);
+ClientList* search_by_name(const char name[40], ClientList* op);
+ClientList* search_by_phone(const char phone[11], ClientList* op);
+void update_client(Client c1, Client c2, ClientList* list);
+Client* create_client(const char id[10], const char name[40], const char phone_num[11], const char status[35], const char email[40], float sum);
+float search_sum_deal(int package);
+float sum_for_client(const char id[10], OpList* list);
+bool isExist(const char id[10], EmpList *list);
+void addEmployee(const char id[10], const char name[30], const char password[10], bool isManager, EmpList* list);
+EmpList * list_employee();
+EmpList* not_found_employee();
+EmpList* search_by_id(const char id[10], EmpList* op);
+EmpList* search_by_name(const char name[30], EmpList* op);
+void update_Employee(Employee e1, Employee e2, EmpList* list);
+Employee* create_employee(const char id[10], const char name[30], const char password[10], bool isManager, EmpList* list);
+OpList* not_found_opportunity();
+OpList* search_by_idClient(const char id[10], OpList* op);
+OpList* search_by_idEmployee(const char id[10], OpList* op);
+OpList* search_by_name(const char name[11], OpList* op);
+OpList* search_by_status(const char status[35], OpList* op);
+OpList* list_opportunities();
+Opportunity* newSaleOpp(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list);
+void writeSOpp(Opportunity s);
+OpList* add_Opportunity(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list);
+int count_Low_Potential(OpList* list);
+int count_High_Potential(OpList* list);
+int count_Closed_Won(OpList* list);
+int count_Closed_Lost(OpList* list);
+void update_Opportunity(Opportunity o1, Opportunity o2, OpList* list);
