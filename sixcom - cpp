@@ -1,0 +1,1017 @@
+#include "Header.h"
+
+/*returns true if the list is empty*/
+bool cl_isEmpty(ClientList cl)
+{
+	return !(cl.size > 0);
+}
+
+/*pushes a new object to the head of the list*/
+void cl_prepend(Client* c, ClientList* cl)
+{
+	c->next = cl->head;
+	cl->head = c;
+	++cl->size;
+}
+
+/*pushes a new object to the tail of the list*/
+void cl_append(Client* c, ClientList* cl)
+{
+	if (!cl_isEmpty(*cl))
+	{
+		Client* last = cl->head;
+		for (int i = 0; i < cl->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = c;
+		++cl->size;
+	}
+	else
+		cl_prepend(c, cl);
+
+}
+
+/*gets an object from the list by index*/
+Client* cl_get(int index, const ClientList* cl)
+{
+	Client* c = cl->head;
+	while (c && index--) {
+		c = c->next;
+	}
+	return c;
+}
+
+/*removes an object from the list by index*/
+void cl_remove(int index, ClientList* cl) {
+	Client* toDelete;
+
+	if (index == 0) {
+		toDelete = cl->head;
+		cl->head = cl->head->next;
+	}
+	else {
+		Client* before = cl_get(index - 1, cl);
+		toDelete = before->next;
+		before->next = toDelete->next;
+	}
+
+	cl->size--;
+	delete toDelete;
+}
+
+/*return list's size*/
+unsigned cl_length(const ClientList* cl) {
+	return cl->size;
+}
+
+/*transforms a clientlist to array and returns it*/
+Client* cl_toArray(ClientList* cl)
+{
+	Client* arr = new Client[cl->size];
+	for (int i = 0; i < cl->size; i++)
+	{
+		arr[i] = *(cl_get(i, cl));
+	}
+	return arr;
+}
+
+/*returns true if the list is empty*/
+bool el_isEmpty(EmpList el)
+{
+	return el.size == 0;
+}
+
+/*pushes a new object to the head of the list*/
+void el_prepend(Employee* e, EmpList* el)
+{
+	e->next = el->head;
+	el->head = e;
+	++el->size;
+}
+
+/*pushes a new object to the tail of the list*/
+void el_append(Employee* e, EmpList* el)
+{
+	if (!el_isEmpty(*el))
+	{
+		Employee* last = el->head;
+		for (int i = 0; i < el->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = e;
+		++el->size;
+	}
+	else
+		el_prepend(e, el);
+}
+
+/*gets an object from the list by index*/
+Employee* el_get(int index, const EmpList* el)
+{
+	Employee* e = el->head;
+	while (e && index--) {
+		e = e->next;
+	}
+	return e;
+}
+
+/*removes an object from the list by index*/
+void el_remove(int index, EmpList* el) {
+	Employee* before = el->head;
+	Employee* toDelete;
+
+	if (index == 0) {
+		toDelete = el->head;
+		el->head = el->head->next;
+	}
+	else {
+		Employee* before = (el_get(index - 1, el));
+		toDelete = before->next;
+		before->next = toDelete->next;
+	}
+
+	el->size--;
+	delete toDelete;
+}
+
+/*return list's size*/
+unsigned el_length(const EmpList* el) {
+	return el->size;
+}
+
+/*transforms a clientlist to array and returns it*/
+Employee* el_toArray(EmpList* el)
+{
+	Employee* arr = new Employee[el->size];
+	for (int i = 0; i < el->size; i++)
+	{
+		arr[i] = *el_get(i, el);
+	}
+
+	return arr;
+}
+
+/* returns true if the list is empty */
+bool ol_isEmpty(OpList ol)
+{
+	return !(ol.size > 0);
+}
+
+/* pushes a new object to the head of the list */
+void ol_prepend(Opportunity* op, OpList* ol)
+{
+	op->next = ol->head;
+	ol->head = op;
+	++ol->size;
+}
+
+/* pushes a new object to the tail of the list */
+void ol_append(Opportunity* o, OpList* ol)
+{
+	if (!ol_isEmpty(*ol))
+	{
+		Opportunity* last = ol->head;
+		for (int i = 0; i < ol->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = o;
+		++ol->size;
+	}
+	else
+		ol_prepend(o, ol);
+
+}
+
+/* gets an object from the list by index */
+Opportunity * ol_get(int index, const OpList* ol)
+{
+	Opportunity* o = ol->head;
+	while (o && index--) {
+		o = o->next;
+	}
+	return o;
+}
+
+/* removes an object from the list by index */
+void ol_remove(int index, OpList* ol) {
+	Opportunity* toDelete;
+
+	if (index == 0) {
+		toDelete = ol->head;
+		ol->head = ol->head->next;
+	}
+	else {
+		Opportunity* before = ol_get(index - 1, ol);
+		toDelete = before->next;
+		before->next = toDelete->next;
+	}
+
+	ol->size--;
+	delete toDelete;
+}
+
+/* return list's size */
+unsigned ol_length(const OpList* ol) {
+	return ol->size;
+}
+
+/* transforms a clientlist to array and returns it */
+Opportunity * ol_toArray(OpList* ol)
+{
+	Opportunity* arr = new Opportunity[ol->size];
+	for (int i = 0; i < ol->size; i++)
+	{
+		arr[i] = *(ol_get(i, ol));
+	}
+
+	return arr;
+}
+
+
+//check if a client is already exist
+bool isExist(const char id[10], ClientList* list)
+{
+	Client* temp = list->head;
+	for (int i = 0; i < list->size; i++)
+	{
+		if (strcmp(id, temp->id) == 0)
+			return true;
+		temp = temp->next;
+	}
+	return false;
+}
+
+void add_client(const char id[10], const char name[40], const char phone_num[11], const char status[35], const char email[40], float sum, ClientList* list)
+{
+	if (!isExist(id, list))
+	{
+		ofstream file;
+		file.open("clients.txt", ios::app);
+
+		if (file.is_open())
+		{
+			file << id << ",";
+			file << name << "%";
+			file << phone_num << "-";
+			file << status << "/";
+			file << email << "*";
+			file << sum << "&";
+			file << "\n";
+		}
+		file.close();
+
+		Client* c = new Client;
+		strcpy(c->id, id);
+		strcpy(c->name, name);
+		strcpy(c->phone, phone_num);
+		strcpy(c->status, status);
+		strcpy(c->email, email);
+		c->sum = sum;
+
+		cl_append(c, list);
+	}
+}
+
+ClientList * list_client() {
+	int i, j;
+	string ch = " ";
+	string line = " ", package;
+
+	ifstream file;
+	file.open("clients.txt");
+
+	ClientList* list = new ClientList;
+
+	if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			Client* c = new Client;
+			getline(file, line);
+			if (line != "")
+			{
+				i = line.find(',');
+				strcpy(c->id, line.substr(0, i).c_str());
+				j = line.find('%');
+				strcpy(c->name, line.substr(i + 1, j - i - 1).c_str());
+				i = line.find('-');
+				strcpy(c->phone, line.substr(j + 1, i - j - 1).c_str());
+				j = line.find('/');
+				strcpy(c->status, line.substr(i + 1, j - i - 1).c_str());
+				i = line.find('*');
+				strcpy(c->email, line.substr(j + 1, i - j - 1).c_str());
+				c->sum = stof(line.substr(i + 1, strlen(line.c_str() - 1)));
+				cl_append(c, list);
+			}
+		}
+
+	}
+	return list;
+}
+
+void delete_client(const char id[10], ClientList* list)
+{
+	ifstream file;
+	ofstream temp;
+	string line, idNumber, client;
+	int index, i;
+
+	file.open("clients.txt");
+	temp.open("temp.txt");
+
+	if (file.is_open() && temp.is_open())
+	{
+		while (!file.eof())
+		{
+			getline(file, line);
+			index = line.find(",");
+			idNumber = line.substr(0, index);
+			if (idNumber == id)
+			{
+				index = line.find('-');
+				client = line.substr(0, index + 1);
+				temp << client;
+				temp << "non active/";
+				i = line.find('/');
+				client = line.substr(i + 1, strlen(line.c_str()));
+				temp << client;
+			}
+			else
+			{
+				temp << line;
+				temp << '\n';
+			}
+		}
+
+		file.close();
+		temp.close();
+		remove("clients.txt");
+		rename("temp.txt", "clients.txt");
+	}
+
+	char status[35];
+	strcpy(status, "non active");
+
+	Client* c;
+	for (int i = 0; i < list->size; i++)
+	{
+		c = cl_get(i, list);
+		if (strcmp(c->id, id) == 0)
+			strcpy(c->status, status);
+	}
+}
+
+void block_client(const char id[10], ClientList* list)
+{
+	ifstream file;
+	ofstream temp;
+	string line, idNumber, client;
+	int index, i;
+
+	file.open("clients.txt");
+	temp.open("temp.txt");
+
+	if (file.is_open() && temp.is_open())
+	{
+		while (!file.eof())
+		{
+			getline(file, line);
+			index = line.find(",");
+			idNumber = line.substr(0, index);
+			if (idNumber == id)
+			{
+				index = line.find('-');
+				client = line.substr(0, index + 1);
+				temp << client;
+				temp << "blocked/";
+				i = line.find('/');
+				client = line.substr(i + 1, strlen(line.c_str()));
+				temp << client;
+			}
+			else
+			{
+				temp << line;
+				temp << '\n';
+			}
+		}
+
+		file.close();
+		temp.close();
+		remove("clients.txt");
+		rename("temp.txt", "clients.txt");
+	}
+
+	char status[35];
+	strcpy(status, "blocked");
+
+	Client* c;
+	for (int i = 0; i < list->size; i++)
+	{
+		c = cl_get(i, list);
+		if (strcmp(c->id, id) == 0)
+			strcpy(c->status, status);
+	}
+}
+
+/*empty node of client*/
+ClientList* not_found1() {
+	ClientList *names = new ClientList;
+	Client *new1 = new Client;
+	strcpy(new1->name, " not found");
+	strcpy(new1->id, " ");
+	strcpy(new1->name, " ");
+	strcpy(new1->phone, " ");
+	strcpy(new1->status, " ");
+	new1->sum = 0;
+	new1->next = NULL;
+	cl_prepend(new1, names);
+	names->size = names->size - 1;
+	return names;
+}
+
+/*list client by id*/
+ClientList* search_by_id(const char id[10], ClientList* op) {
+	Client* current = op->head;
+	ClientList *names = new ClientList;
+
+	while (current != NULL) {
+		if (strcmp(current->id, id) == 0) {
+			Client* new1 = new Client;
+			*new1 = *current;
+			new1->next = nullptr;
+			cl_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (cl_isEmpty(*names))
+		names = not_found1();
+	return names;
+}
+
+/*list client by name*/
+ClientList* search_by_name(const char name[40], ClientList* op) {
+	Client* current = op->head;
+	ClientList *names = new ClientList;
+
+	while (current != NULL) {
+		if (strcmp(current->name, name) == 0) {
+			Client* new1 = new Client;
+			*new1 = *current;
+			new1->next = nullptr;
+			cl_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (cl_isEmpty(*names))
+		names = not_found1();
+	return names;
+}
+
+/*list client by phone*/
+ClientList* search_by_phone(const char phone[11], ClientList* op) {
+	Client* current = op->head;
+	ClientList *names = new ClientList;
+
+	while (current != NULL) {
+		if (strcmp(current->phone, phone) == 0) {
+			Client* new1 = new Client;
+			*new1 = *current;
+			new1->next = nullptr;
+			cl_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (cl_isEmpty(*names))
+		names = not_found1();
+	return names;
+}
+
+/*update client*/
+void update_client(Client c1, Client c2, ClientList* list)
+{
+	Client* head = list->head;
+
+	for (int i = 0; i < list->size; ++i)
+	{
+		if (strcmp(c1.id, head->id) == 0)
+		{
+			cl_remove(i, list);
+			break;
+		}
+		head = head->next;
+	}
+
+	cl_append(&c2, list);
+
+	ifstream file;
+	ofstream temp;
+	string line, id;
+	int i;
+
+	file.open("clients.txt");
+	temp.open("temp.txt");
+
+	if (file.is_open() && temp.is_open())
+	{
+		while (!file.eof())
+		{
+			getline(file, line);
+			i = line.find(',');
+			id = line.substr(0, i);
+			if (!(strcmp(c1.id, id.c_str()) == 0))
+				temp << line << endl;
+		}
+
+		temp << c2.id << ',' << c2.name << '%' << c2.phone << '-' << c2.status << '/' << c2.email << '*' << c2.sum << '&';
+		file.close();
+		temp.close();
+		remove("clients.txt");
+		rename("temp.txt", "clients.txt");
+	}
+}
+
+Client* create_client(const char id[10], const char name[40], const char phone_num[11], const char status[35], const char email[40], float sum)
+{
+	Client* c = new Client;
+	strcpy(c->id, id);
+	strcpy(c->name, name);
+	strcpy(c->phone, phone_num);
+	strcpy(c->status, status);
+	strcpy(c->email, email);
+	c->sum = sum;
+	return c;
+}
+
+
+float search_sum_deal(int package)
+{
+	int i, j, num;
+	float sum;
+	string line = "";
+	ifstream file;
+	file.open("deals.txt");
+
+	if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			getline(file, line);
+			if (line != "")
+			{
+				i = line.find(',');
+				num = stoi(line.substr(0, i).c_str());
+				if (num == package)
+				{
+					j = line.find('/');
+					sum = stof(line.substr(i + 1, j - i - 1).c_str());
+					return sum;
+				}
+			}
+		}
+	}
+}
+
+float sum_for_client(const char id[10], OpList* list)
+{
+	int package;
+	float sum = 0;
+	OpList* op = search_by_idClient(id, list);
+	op = search_by_status("closed won", list);
+	Opportunity* temp = op->head;
+	while (temp != NULL)
+	{
+		package = temp->package;
+		sum += search_sum_deal(package);
+		temp = temp->next;
+	}
+	return sum;
+}
+
+/*check if employee is exist*/
+bool isExist(const char id[10], EmpList *list)
+{
+	Employee* temp = list->head;
+	for (int i = 0; i < list->size; i++)
+	{
+		if (strcmp(id, temp->id) == 0)
+			return true;
+		temp = temp->next;
+	}
+	return false;
+}
+
+/*add employee to list and file*/
+void addEmployee(const char id[10], const char name[30], const char password[10], bool isManager, EmpList* list)
+{
+	if (!isExist(id, list))
+	{
+		ofstream file;
+		file.open("Workers.txt", ios::app);
+
+		if (file.is_open())
+		{
+			file << "\n";
+			file << id << ",";
+			file << name << ".";
+			file << password << "-";
+			file << isManager;
+		}
+		file.close();
+
+		Employee* e = new Employee;
+		strcpy(e->id, id);
+		strcpy(e->name, name);
+		strcpy(e->password, password);
+		e->isManager = isManager;
+		el_append(e, list);
+	}
+}
+
+/*list employees by file*/
+EmpList * list_employee() {
+	int i, j;
+	string line = " ", id, name, password, isManager;
+
+	ifstream file;
+	file.open("employees.txt");
+
+	EmpList* list = new EmpList;
+
+	if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			Employee* e = new Employee;
+			getline(file, line);
+			if (line != "")
+			{
+				i = line.find(',');
+				strcpy(e->id, line.substr(0, i).c_str());
+				j = line.find('.');
+				strcpy(e->name, line.substr(i + 1, j - i - 1).c_str());
+				i = line.find('-');
+				strcpy(e->password, line.substr(j + 1, i - j - 1).c_str());
+				e->isManager = stoi(line.substr(i + 1, strlen(line.c_str())));
+
+				el_append(e, list);
+			}
+		}
+	}
+	return list;
+}
+
+/*empty node of employee*/
+EmpList* not_found_employee() {
+	EmpList *names = new EmpList;
+	Employee *new1 = new Employee;
+	strcpy(new1->name, " not found");
+	strcpy(new1->id, " ");
+	strcpy(new1->name, " ");
+	strcpy(new1->password, " ");
+	new1->isManager = 0;
+	new1->next = NULL;
+	el_prepend(new1, names);
+	names->size = names->size - 1;
+	return names;
+}
+
+/*list employee by id*/
+EmpList* search_by_id(const char id[10], EmpList* op) {
+	Employee* current = op->head;
+	EmpList *names = new EmpList;
+
+	while (current != NULL) {
+		if (strcmp(current->id, id) == 0) {
+			Employee* new1 = new Employee;
+			*new1 = *current;
+			new1->next = nullptr;
+			el_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (el_isEmpty(*names))
+		names = not_found_employee();
+	return names;
+}
+
+/*list employee by name*/
+EmpList* search_by_name(const char name[30], EmpList* op) {
+	Employee* current = op->head;
+	EmpList *names = new EmpList;
+
+	while (current != NULL) {
+		if (strcmp(current->name, name) == 0) {
+			Employee* new1 = new Employee;
+			*new1 = *current;
+			new1->next = nullptr;
+			el_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (el_isEmpty(*names))
+		names = not_found_employee();
+	return names;
+}
+
+/*update employee*/
+void update_Employee(Employee e1, Employee e2, EmpList* list)
+{
+	Employee* head = list->head;
+
+	for (int i = 0; i < list->size; ++i)
+	{
+		if (strcmp(e1.id, head->id) == 0)
+		{
+			el_remove(i, list);
+			break;
+		}
+		head = head->next;
+	}
+
+	el_append(&e2, list);
+
+	ifstream file;
+	ofstream temp;
+	string line, id;
+	int i;
+
+	file.open("employees.txt");
+	temp.open("temp.txt");
+
+	if (file.is_open() && temp.is_open())
+	{
+		while (!file.eof())
+		{
+			getline(file, line);
+			i = line.find(',');
+			id = line.substr(0, i);
+			if (!(strcmp(e1.id, id.c_str()) == 0))
+				temp << line << endl;
+		}
+
+		temp << e2.id << ',' << e2.name << '.' << e2.password << '-' << e2.isManager;
+
+		file.close();
+		temp.close();
+		remove("employees.txt");
+		rename("temp.txt", "employees.txt");
+	}
+}
+
+Employee* create_employee(const char id[10], const char name[30], const char password[10], bool isManager, EmpList* list)
+{
+	Employee* e = new Employee;
+	strcpy(e->id, id);
+	strcpy(e->name, name);
+	strcpy(e->password, password);
+	e->isManager = isManager;
+	return e;
+}
+
+OpList* not_found_opportunity() {
+	OpList *names = new OpList;
+	Opportunity *new1 = new Opportunity;
+	strcpy(new1->name, " not found");
+	strcpy(new1->idClient, " ");
+	strcpy(new1->idEmployee, " ");
+	strcpy(new1->name, " ");
+	strcpy(new1->status, " ");
+	new1->package = 0;
+	new1->next = NULL;
+	ol_prepend(new1, names);
+	names->size = names->size - 1;
+	return names;
+}
+
+OpList* search_by_idClient(const char id[10], OpList* op) {//get id and client list and return tle list with one node include matched client evenwise not foun node
+	Opportunity *current = op->head;
+	OpList *names = new OpList;
+
+	while (current != NULL) {
+		if (strcmp(current->idClient, id) == 0) {
+			Opportunity* new1 = new Opportunity;
+			*new1 = *current;
+			new1->next = nullptr;
+			ol_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (ol_isEmpty(*names))
+		names = not_found_opportunity();
+	return names;
+}
+
+OpList* search_by_idEmployee(const char id[10], OpList* op) {//get id and client list and return tle list with one node include matched client evenwise not foun node
+	Opportunity *current = op->head;
+	OpList *names = new OpList;
+
+	while (current != NULL) {
+		if (strcmp(current->idEmployee, id) == 0) {
+			Opportunity* new1 = new Opportunity;
+			*new1 = *current;
+			new1->next = nullptr;
+			ol_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (ol_isEmpty(*names))
+		names = not_found_opportunity();
+	return names;
+}
+
+OpList* search_by_name(const char name[11], OpList* op) {//get phone number and client list and return tle list with one node include matched client evenwise not foun node
+	Opportunity *current = op->head;
+	OpList *names = new OpList;
+
+	while (current != NULL) {
+		if (strcmp(current->name, name) == 0) {
+			Opportunity* new1 = new Opportunity;
+			*new1 = *current;
+			new1->next = nullptr;
+			ol_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (ol_isEmpty(*names))
+		names = not_found_opportunity();
+	return names;
+}
+
+OpList* search_by_status(const char status[35], OpList* op) {
+	Opportunity *current = op->head;
+	OpList *names = new OpList;
+
+	while (current != NULL) {
+		if (strcmp(current->status, status) == 0) {
+			Opportunity* new1 = new Opportunity;
+			*new1 = *current;
+			new1->next = nullptr;
+			ol_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (ol_isEmpty(*names))
+		names = not_found_opportunity();
+	return names;
+}
+
+OpList* list_opportunities() {
+	int i, j;
+	string line = " ", idClient, idEmployee, name, status, package;
+
+	ifstream file;
+	file.open("opportunities.txt");
+
+	OpList* list = new OpList;
+
+	if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			Opportunity* o = new Opportunity;
+			getline(file, line);
+			if (line != "")
+			{
+				i = line.find(',');
+				strcpy(o->idClient, line.substr(0, i).c_str());
+				j = line.find('.');
+				strcpy(o->idEmployee, line.substr(i + 1, j - i - 1).c_str());
+				i = line.find('&');
+				strcpy(o->name, line.substr(j + 1, i - j - 1).c_str());
+				j = line.find('/');
+				strcpy(o->status, line.substr(i + 1, j - i - 1).c_str());
+				o->package = stoi(line.substr(j + 1, strlen(line.c_str())));
+
+				ol_append(o, list);
+			}
+		}
+
+	}
+	return list;
+}
+
+void printOpportunity(Opportunity s)//prints saleOpp for to check the code
+{
+	cout << "EId: " << s.idClient << " CId: " << s.idEmployee << " name: " << s.name << " status:" << s.status << " package:" << s.package << '\n';
+}
+
+void printOppList(OpList h)//prints list for code tests
+{
+	Opportunity* tmp;
+	if (h.head != NULL)
+	{
+		cout << "SOpp list :" << '\n';
+		tmp = h.head;
+		while (tmp != NULL)
+		{
+			printOpportunity((*tmp));
+			tmp = tmp->next;
+		}
+	}
+}
+
+Opportunity* newSaleOpp(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list)//creates a saleOpp with input parameters
+{
+	Opportunity* tmp = new Opportunity;
+	strcpy(tmp->idClient, clntId);
+	strcpy(tmp->idEmployee, emplId);
+	strcpy(tmp->name, name);
+	strcpy(tmp->status, status);
+	tmp->package = package;
+	return tmp;
+}
+
+void writeSOpp(Opportunity s)//adds a saleOpp to the end of the txt file
+{
+	ofstream write;
+	write.open("opportunities.txt", ofstream::app);
+	char n[sizeof(s.name) + 1];
+	strncpy(n, s.name, sizeof(s.name));
+	write << s.idClient << ',' << s.idEmployee << '.' << s.name << '&' << s.status << '/' << s.package << '\n';
+	write.close();
+}
+
+OpList* add_Opportunity(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list)
+{
+	Opportunity* o = newSaleOpp(clntId, emplId, name, status, package, list);
+	ol_append(o, list);
+	writeSOpp(*o);
+	return list;
+}
+
+int count_Low_Potential(OpList* list)
+{
+	OpList* status = search_by_status("Low potential", list);
+	return status->size;
+}
+
+int count_High_Potential(OpList* list)
+{
+	OpList* status = search_by_status("High potential", list);
+	return status->size;
+}
+
+int count_Closed_Won(OpList* list)
+{
+	OpList* status = search_by_status("Closed won", list);
+	return status->size;
+}
+
+int count_Closed_Lost(OpList* list)
+{
+	OpList* status = search_by_status("Closed lost", list);
+	return status->size;
+}
+
+void update_Opportunity(Opportunity o1, Opportunity o2, OpList* list)
+{
+	Opportunity* head = list->head;
+
+	for (int i = 0; i < list->size; ++i)
+	{
+		if (strcmp(o1.idClient, head->idClient) == 0 && strcmp(o1.idEmployee, head->idEmployee) == 0 && o1.package == head->package)
+		{
+			ol_remove(i, list);
+			break;
+		}
+		head = head->next;
+	}
+
+	ol_append(&o2, list);
+
+	ifstream file;
+	ofstream temp;
+	string line, idClient, idEmployee, package;
+	int i, j;
+
+	file.open("opportunities.txt");
+	temp.open("temp.txt");
+
+	if (file.is_open() && temp.is_open())
+	{
+		while (!file.eof())
+		{
+			getline(file, line);
+			i = line.find(',');
+			idClient = line.substr(0, i);
+			j = line.find('.');
+			idEmployee = line.substr(i + 1, j - i - 1);
+			i = line.find('&');
+			j = line.find('/');
+			package = line.substr(j + 1, strlen(line.c_str()));
+
+			if (!(strcmp(o1.idClient, idClient.c_str()) == 0 && strcmp(o1.idEmployee, idEmployee.c_str()) == 0 && o1.package == stoi(package)))
+				temp << line << endl;
+		}
+
+		temp << o2.idClient << ',' << o2.idEmployee << '.' << o2.name << '&' << o2.status << '/' << o2.package << '\n';
+
+		file.close();
+		temp.close();
+		remove("opportunities.txt");
+		rename("temp.txt", "opportunities.txt");
+	}
+}
