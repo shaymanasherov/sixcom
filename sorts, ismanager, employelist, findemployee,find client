@@ -1,0 +1,387 @@
+ClientList* search_by_num(char num[11], ClientList* cl);//get phone number and client list and return tle list with one node include matched client evenwise not foun node
+
+Client* em_get(int index, const ClientList* em);//help function to convert employee list to array
+
+Client* cl_toArray(ClientList* em); //function to convert employee list to array
+ClientList* sort_name_Client(ClientList* em); //function create new list and sort it by the alphabetical order and return new list
+ClientList* sort_status(ClientList* em); //function create new list and sort it by the alphabetical order and return new list
+ClientList* not_found1(); //help function return list that says the asked match not found
+//below function getting name and employee list and return the list of people who match the name or list that say the ther is no person exist
+ClientList* search_by_name(char name[40], ClientList* cl);
+ClientList* search_by_id(char id[10], ClientList* em);//get id and client list and return tle list with one node include matched client evenwise not foun node
+EmpList* not_found();
+EmpList* sort_name_Emp(EmpList* em);//create new list sort by alphbetic order
+void cl_prepend(Employee* e, EmpList* em);//function to add the first node to the list
+void cl_append(Employee* e, EmpList* em);// function to add other nodes to the list
+bool cl_isEmpty(EmpList em);// function checks if the list is empty 
+bool Ismanager(char id[10], EmpList* em);//bool function return true or false if the certain id belong to manager,get string and list of employes
+Employee* cl_toArray(EmpList* em);//function to convert list to array
+Employee* em_get(int index, const EmpList* em);//help function to convert list to array
+void cl_append(Client* c, ClientList* cl);// funcrion add client to the and of list
+void cl_prepend(Client* c, ClientList* cl);//function put the client to the head of the list if the list is empty
+bool cl_isEmpty(ClientList cl);//function cheking if the client list is empty
+EmpList* search_by_id(char id[11], EmpList* em); //function get id and list and return list of one preson if one exist if not so list return alarm that person not
+EmpList* search_by_name(char name[40], EmpList* em); //function getting name and employee list and return the list of peaple how match the name
+EmpList * list_employee(){ //function read from file and create list
+	ifstream fin;
+	fin.open("Workers.txt", ifstream::in);
+	string str;
+	char temp[20];
+	EmpList* em = new EmpList;
+	if (!fin.is_open()){
+		return 0;
+	}
+	else{
+		while (!fin.eof()){
+			Employee* e = new Employee;
+			getline(fin, str);
+			if (str != ""){
+				int i = 0, j = 0;
+				for (i; str[i] != ','; i++, j++){
+					temp[j] = str[i];
+				}
+				temp[j] = '\0';
+				strcpy(e->id, temp);
+				j = 0;
+				i++;
+				for (i; str[i] != '.'; i++, j++){
+					temp[j] = str[i];
+				}
+				temp[j] = '\0';
+				strcpy(e->name, temp);
+				j = 0;
+				i++;
+				for (i; str[i] != '-'; i++, j++){
+					temp[j] = str[i];;
+				}
+				temp[j] = '\0';
+				strcpy(e->password, temp);
+
+				j = 0;
+				i++;
+				temp[j] = str[i];
+				temp[j + 1] = '\0';
+				if (temp[j] == '0'){
+					e->isManager = false;
+				}
+				else
+					e->isManager = true;
+				cl_append(e, em);
+			}
+		}
+
+	}
+	return em;
+}
+void cl_prepend(Employee* e, EmpList* em)//help function to create list of employee (if it the first element in list this funcrion will be activated)
+{
+	e->next = em->head;
+	em->head = e;
+	++em->size;
+}
+void cl_append(Employee* e, EmpList* em)//function to create the list of structs of employee
+{
+	if (!cl_isEmpty(*em))
+	{
+		Employee* last = em->head;
+		for (int i = 0; i < em->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = e;
+		++em->size;
+	}
+	else
+		cl_prepend(e, em);
+
+}
+bool cl_isEmpty(EmpList em)
+{
+	return !(em.size > 0);
+}
+EmpList* sort_name_Emp(EmpList* em){ //function create new list and sort it by the alphabetical order and return new list
+	EmpList *list = new EmpList;
+	Employee *arr = new Employee[em->size];
+	Employee *temp = new Employee[em->size];
+	arr = cl_toArray(em);
+	for (int i = 0; i < em->size; i++){
+		for (int j = 1; j<em->size; j++){
+			if ((strcmp(arr[j - 1].name, arr[j].name))>0){
+				temp[0] = arr[j - 1];
+				arr[j - 1] = arr[j];
+				arr[j] = temp[0];
+			}
+		}
+	}
+	for (int i = 0; i < em->size; i++){
+		Employee *node = new Employee;
+		arr[i].next = NULL;
+		*(node) = arr[i];
+		cl_append(node, list);
+	}
+	return list;
+}
+Employee* cl_toArray(EmpList* em) //function to convert employee list to array
+{
+	Employee* arr = new Employee[em->size];
+	for (int i = 0; i < em->size; i++)
+	{
+		arr[i] = *(em_get(i, em));
+	}
+
+	return arr;
+}
+Employee* em_get(int index, const EmpList* em)//help function to convert employee list to array
+{
+	Employee* c = em->head;
+	while (c && index--) {
+		c = c->next;
+	}
+	return c;
+}
+bool Ismanager(char *i, EmpList* em){//return true or false if specific id is manager
+	Employee *current = em->head;
+	string id(i);
+	while (current != NULL){
+		string id1(current->id);
+		if (id == id1){
+			if (current->isManager){
+				return true;
+			}
+			else
+				return false;
+		}
+		current = current->next;
+	}
+}
+//function getting name and employee list and return the list of people who match the name or list that say the ther is no person exist
+EmpList* search_by_name(char name[40], EmpList* em){
+	Employee *current = em->head;
+	EmpList *names = new EmpList;
+	Employee *new1 = new Employee;
+	char temp[20];
+	int i, j = 0;
+	char name2[40];
+	while (current != NULL){
+		strcpy(name2, current->name);
+		while (name2[j - 1] != '\0'){
+			for (j, i = 0; (name2[j] != ' ') && (name2[j] != '\0'); i++){
+				temp[i] = name2[j];
+				j++;
+			}
+			temp[i] = '\0';
+			i = 0;
+			j++;
+			if (strcmp(temp, name) == 0){
+				Employee *new1 = new Employee;
+				*new1 = *current;
+				new1->next = NULL;
+				cl_append(new1, names);
+			}
+		}
+		current = current->next;
+		j = 0;
+	}
+	if (cl_isEmpty(*names)){
+		names = not_found();
+	}
+	return names;
+}
+//function get id and list and return list of one preson if one exist if not so list return alarm that person not
+EmpList* search_by_id(char id[10], EmpList* em){
+	Employee *current = em->head;
+	EmpList *names = new EmpList;
+	Employee *new1 = new Employee;
+	while (current != NULL){
+		if (strcmp(current->id, id) == 0){
+			*new1 = *current;
+			cl_prepend(new1, names);
+			return names;
+		}
+		 else 
+			 current = current->next;
+	}
+	if (cl_isEmpty(*names)){
+		names = not_found();
+		return names;
+	}
+
+}
+EmpList* not_found(){//help function return list that says that the search not found
+	EmpList *names = new EmpList;
+	Employee *new1 = new Employee;
+	strcpy(new1->name, " not found");
+	strcpy(new1->id, " ");
+	strcpy(new1->password, " ");
+	new1->isManager = false;
+	cl_prepend(new1, names);
+	names->size = names->size - 1;
+	return names;
+}
+Client* em_get(int index, const ClientList* em)//help function to convert employee list to array
+{
+	Client* c = em->head;
+	while (c && index--) {
+		c = c->next;
+	}
+	return c;
+}
+Client* cl_toArray(ClientList* em) //function to convert employee list to array
+{
+	Client* arr = new Client[em->size];
+	for (int i = 0; i < em->size; i++)
+	{
+		arr[i] = *(em_get(i, em));
+	}
+
+	return arr;
+}
+ClientList* sort_name_Client(ClientList* em){ //function create new list and sort it by the alphabetical order and return new list
+	ClientList *list = new ClientList;
+	Client *arr = new Client[em->size];
+	Client *temp = new Client[em->size];
+	arr = cl_toArray(em);
+	for (int i = 0; i < em->size; i++){
+		for (int j = 1; j<em->size; j++){
+			if ((strcmp(arr[j - 1].name, arr[j].name))>0){
+				temp[0] = arr[j - 1];
+				arr[j - 1] = arr[j];
+				arr[j] = temp[0];
+			}
+		}
+	}
+	for (int i = 0; i < em->size; i++){
+		Client *node = new Client;
+		arr[i].next = NULL;
+		*(node) = arr[i];
+		cl_append(node, list);
+	}
+	return list;
+}
+ClientList* sort_status(ClientList* em){ //function create new list and sort it by the alphabetical order and return new list
+	ClientList *list = new ClientList;
+	Client *arr = new Client[em->size];
+	Client *temp = new Client[em->size];
+	arr = cl_toArray(em);
+	for (int i = 0; i < em->size; i++){
+		for (int j = 1; j<em->size; j++){
+			if ((strcmp(arr[j - 1].status, arr[j].status))>0){
+				temp[0] = arr[j - 1];
+				arr[j - 1] = arr[j];
+				arr[j] = temp[0];
+			}
+		}
+	}
+	for (int i = 0; i < em->size; i++){
+		Client *node = new Client;
+		arr[i].next = NULL;
+		*(node) = arr[i];
+		cl_append(node, list);
+	}
+	return list;
+}
+ClientList* not_found1(){
+	ClientList *names = new ClientList;
+	Client *new1 = new Client;
+	strcpy(new1->name, " not found");
+	strcpy(new1->id, " ");
+	strcpy(new1->phone, " ");
+	strcpy(new1->email, " ");
+	strcpy(new1->status, " ");
+	new1->next = NULL;
+	cl_prepend(new1, names);
+	names->size = names->size - 1;
+	return names;
+}
+//function getting name and employee list and return the list of people who match the name or list that say the ther is no person exist
+ClientList* search_by_name(char name[40], ClientList* cl){
+	Client *current = cl->head;
+	ClientList *names = new ClientList;
+	char temp[20];
+	int i, j = 0;
+	char name2[40];
+	while (current != NULL){
+		strcpy(name2, current->name);
+		while (name2[j - 1] != '\0'){
+			for (j, i = 0; (name2[j] != ' ') && (name2[j] != '\0'); i++){
+				temp[i] = name2[j];
+				j++;
+			}
+			temp[i] = '\0';
+			i = 0;
+			j++;
+			if (strcmp(temp, name) == 0){
+				Client *new1 = new Client;
+				*new1 = *current;
+				new1->next = NULL;
+				cl_append(new1, names);
+			}
+		}
+		current = current->next;
+		j = 0;
+	}
+	if (cl_isEmpty(*names)){
+		names = not_found1();
+	}
+	return names;
+}
+ClientList* search_by_id(char id[10], ClientList* em){//get id and client list and return tle list with one node include matched client evenwise not foun node
+	Client *current = em->head;
+	ClientList *names = new ClientList;
+	Client *new1 = new Client;
+	while (current != NULL){
+		if (strcmp(current->id, id) == 0){
+			*new1 = *current;
+			cl_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (cl_isEmpty(*names))
+		names = not_found1();
+	return names;
+
+}
+ClientList* search_by_num(char num[11], ClientList* cl){//get phone number and client list and return tle list with one node include matched client evenwise not foun node
+	Client *current = cl->head;
+	ClientList *names = new ClientList;
+	Client *new1 = new Client;
+	while (current != NULL){
+		if (strcmp(current->phone, num) == 0){
+			*new1 = *current;
+			cl_prepend(new1, names);
+		}
+		current = current->next;
+	}
+	if (cl_isEmpty(*names))
+		names = not_found1();
+	return names;
+}
+// returns true if the list is empty //
+bool cl_isEmpty(ClientList cl)
+{
+	return !(cl.size > 0);
+}
+// pushes a new object to the head of the list //
+void cl_prepend(Client* c, ClientList* cl)
+{
+	c->next = cl->head;
+	cl->head = c;
+	++cl->size;
+}
+// pushes a new object to the tail of the list //
+void cl_append(Client* c, ClientList* cl)
+{
+	if (!cl_isEmpty(*cl))
+	{
+		Client* last = cl->head;
+		for (int i = 0; i < cl->size - 1; i++)
+		{
+			last = last->next;
+		}
+		last->next = c;
+		++cl->size;
+	}
+	else
+		cl_prepend(c, cl);
+
+}
