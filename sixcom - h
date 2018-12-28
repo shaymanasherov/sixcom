@@ -78,7 +78,7 @@ void ol_remove(int index, OpList* ol);
 unsigned ol_length(const OpList* ol);
 Opportunity * ol_toArray(OpList* ol);
 bool isExist(const char id[10], ClientList* list);
-void add_client(const char id[10], const char name[40], const char phone_num[11], const char status[35], const char email[40], float sum, ClientList* list);
+void add_client(const char id[10], const char name[40], const char phone_num[11], const char status[35], const char email[40], float sum, ClientList* list, OpList* op_list)
 ClientList * list_client();
 void delete_client(const char id[10], ClientList* list);
 void block_client(const char id[10], ClientList* list);
@@ -106,9 +106,14 @@ OpList* search_by_status(const char status[35], OpList* op);
 OpList* list_opportunities();
 Opportunity* newSaleOpp(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list);
 void writeSOpp(Opportunity s);
-OpList* add_Opportunity(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list);
+void add_Opportunity(const char clntId[10], const char emplId[10], const char name[40], const char status[35], int package, OpList* list, ClientList* c_list)
 int count_Low_Potential(OpList* list);
 int count_High_Potential(OpList* list);
 int count_Closed_Won(OpList* list);
 int count_Closed_Lost(OpList* list);
-void update_Opportunity(Opportunity o1, Opportunity o2, OpList* list);
+void update_Opportunity(Opportunity o1, Opportunity o2, OpList* list, ClientList* c_list)
+int login(string id, string pass);
+ClientList* sort_status(ClientList* em);
+ClientList* sort_name_Client(ClientList* em);
+bool Ismanager(char *i, EmpList* em);
+EmpList* sort_name_Emp(EmpList* em);
